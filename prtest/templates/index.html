@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>
+            Registartion
+        </title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    <body background="{% static 'imgs/bg.jpg' %}">
+        <div class="maain">
+            <div class="main">
+                <div class="heads"> 
+                    <h1> STUDENT REGISTARTION FORM</h1>
+                </div>
+                <div class="sep">
+                    <div class="rrform">
+                    <div class="rform">
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <label>Name</label><br>
+                            <input type="text" name="name" id="name" placeholder="First Name | Last Name" required><br>
+                            <label>Email</label><br>
+                            <input type="email" name="email" id="email" placeholder="Email" required><br>
+                            <label>Gender</label>&emsp;&emsp13;
+                            <input type="radio" id="gender" value="male" name="gender" required> Male
+                            <input type="radio" id="gender" value="female" name="gender" required> Female
+                            <br><br><label>Phone</label><br>
+                            <input type="text" name="num" id="num" placeholder="Phone Number" maxlength="10" minlength="10"><br>
+                            <label>DOB</label><br>
+                            <input type="date" name="dob" id="dob" placeholder="Date of Birth" required><br>
+                            <label>Parent Name</label><br>
+                            <input type="text" id="pname" name="pname" placeholder="Parent Name"><br>
+                            <label>Parent Contact</label><br>
+                            <input type="text" name="pnum" id="pnum" placeholder="Parent Contact" maxlength="10" minlength="10" required><br>
+                            <label>Set Password</label><br>
+                            <div class="pass"><input type="password" name="passwd" id="passwd" placeholder="Password" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"> &nbsp;<input type="password" name="passwd1" id="passwd1" placeholder="Verify Password" required></div>
+                            <br><input type="submit" value="submit" id="submit">
+                            &nbsp;<button style="background-color: #4CAF50;
+                            border: none;
+                            color: white;
+                            padding: 10px 12px;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-block;" type="submit" onmouseover="this.style.backgroundColor='red';" onclick="window.location.href='/details'" value="Login">Log-in</button>
+                            {% if messages %}
+                            {% for message in messages %}
+                            <script>alert("{{ message }}");</script>
+                            {% endfor %}
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                    <div class="fimage">
+                        <img src="{% static 'imgs/log.jpg' %}" alt="log.jpg" style="width: 100%; height: 100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

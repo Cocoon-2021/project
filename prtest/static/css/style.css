@@ -1,0 +1,125 @@
+html,body{
+    height: 100%;
+    margin: 0em;
+    padding: 0em;
+    overflow: auto;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.sep{
+    display: flex;
+    font-family: sans-serif;  
+    border-radius: 2cm;
+    height: 100%;
+}
+
+.maain{
+    height: 100%;
+    border-radius: 2cm;
+
+        
+}
+.main{
+    margin-left: 8cm;
+    margin-right: 8cm;
+    margin-bottom: 0.5cm;
+    margin-top: 1cm;
+    font-family: sans-serif;
+    border-radius: 2cm;
+    background-color: aqua;
+    box-shadow: 7px 8px 16px 7px rgba(0, 0, 0, 0.2);
+
+    
+
+}
+
+.heads{
+    background-color: aqua;
+    text-align: center;
+    padding: 1px;
+    border-radius:1000px 0px 2px 2px;
+}
+
+.rform{
+    margin-top: 0.5cm;
+    margin-left: 1cm;
+    margin-right: 1cm;
+    height: 100%;
+    
+}
+.rrform{
+    background-color: rgb(245, 237, 226);
+    width: 50%;
+}
+
+.fimage{
+    flex-grow: 1;
+    width: 50%;
+    height: 100%;
+
+}
+
+.maain input[type=text],input[type=email], select {
+    width: 100%;
+    padding: 10px 10px;
+    margin: 4px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 50%;
+    padding: 10px 10px;
+    margin: 1px 0;
+    display: inline-block;
+    border-radius: 3px;
+    margin-left:1.5cm;
+    background-color: blueviolet;
+    border: none;  
+}
+input[type=submit]:hover {
+    background-color: rgb(99, 10, 172);
+}
+
+input[type=date] {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    margin: 8px 0;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+input[type=password] {
+    width: 50%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    margin: 8px 0;
+    display: inline-block;
+    border-radius: 3px;
+}
+.pass{
+    display: flex;
+    border: none;
+    border-radius: 3px;
+    
+}
+
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+.button:hover {
+    background-color: rgb(40, 219, 145);
+}
+

@@ -1,26 +1,28 @@
 html,body{
     height: 100%;
     margin: 0em;
-    padding: 0em;
     overflow: auto;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    zoom: 90%;
 }
 
 .sep{
     display: flex;
     font-family: sans-serif;  
-    border-radius: 2cm;
+    border-radius: 1cm;
     height: 100%;
+    overflow-y: hidden;
 }
 
 .maain{
     height: 100%;
     border-radius: 2cm;
-
-        
+    overflow-y: auto;  
+          
 }
+
 .main{
     margin-left: 8cm;
     margin-right: 8cm;
@@ -28,18 +30,14 @@ html,body{
     margin-top: 1cm;
     font-family: sans-serif;
     border-radius: 2cm;
-    background-color: aqua;
     box-shadow: 7px 8px 16px 7px rgba(0, 0, 0, 0.2);
-
-    
-
+    height: 100%;
 }
 
 .heads{
-    background-color: aqua;
     text-align: center;
     padding: 1px;
-    border-radius:1000px 0px 2px 2px;
+    border-radius:0px 1px 0px 0px;
 }
 
 .rform{
@@ -61,7 +59,7 @@ html,body{
 
 }
 
-.maain input[type=text],input[type=email], select {
+input[type=text],input[type=email]{
     width: 100%;
     padding: 10px 10px;
     margin: 4px 0;
@@ -74,7 +72,7 @@ html,body{
 input[type=submit] {
     width: 50%;
     padding: 10px 10px;
-    margin: 1px 0;
+    margin: 3px 0;
     display: inline-block;
     border-radius: 3px;
     margin-left:1.5cm;
@@ -108,6 +106,7 @@ input[type=password] {
     border-radius: 3px;
     
 }
+
 
 .button {
     background-color: #4CAF50;

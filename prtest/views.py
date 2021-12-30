@@ -92,11 +92,10 @@ def detail(request):
         print(check)
         if check:
             print("login sucessfull")
-            messages.error(request, "Login Sucessfull")
             print(Details.email, Details.name)
+            return render(request, 'details.html', {'display': check})
         else:
             messages.success(request, "Invalid Credentials")
-
             return render(request, 'details.html', {'display': check})
     return render(request, 'details.html')
 # Create your views here.

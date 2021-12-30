@@ -4,15 +4,15 @@
         Details
     </title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body bgcolor="BAABDA">
+<body bgcolor="BAABDA" class="detail">
 <div class="borderview">
     <div class="mainform">
         <form method="POST" action="">
             {% csrf_token %}
             <div class="inputs">
-                <input type="text" class="inp" id="email" name="email" placeholder="Enter Email"><br>
+                <input type="email" class="inp" id="email" name="email" placeholder="Enter Email"><br>
                 <input type="password" id="passwd" name="passwd" placeholder="Enter Password"><br>
                 <br>
                 <input type="submit" value="Login" id="submit" name="submit">
@@ -28,6 +28,8 @@
                 <label ><u>Details</u></label><br>
                 <label>Name:</label>
                 <input type="text" value="{{x.name}}" name="name" disabled>
+                <label>Gender:</label>
+                <input type="text" value="{{x.gender}}" name="gender" disabled>
                 <label>Email:</label>
                 <input type="text" value="{{x.email}}" name="email" disabled>
                 <label>Number:</label>

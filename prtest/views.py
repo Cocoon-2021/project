@@ -23,43 +23,19 @@ def home(request):
         obj.name = name
         obj.dob = dob
         obj.pname = pname
+        obj.gender = gender
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         preg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
 
-        # if re.fullmatch(regex, email):
-        #     obj.email = email
-        #     if len(num) == 10:
-        #         obj.num = num
-        #         if len(pnum) == 10:
-        #             obj.pnum = pnum
-        #             if passwd == passwd1:
-        #                 pat = re.compile(preg)
-        #                 mat = re.search(pat, passwd)
-        #                 if mat:
-        #                     obj.passwd = passwd
-        #                 else:
-        #                     lst.append("Password invalid !!")
-        #
-        #             else:
-        #                 lst.append("passwords are mismatched")
-        #
-        #         else:
-        #             lst.append("parent number doesn't follow property")
-        #
-        #     else:
-        #         lst.append("number doesn't follow property")
-        #
-        # else:
-        #     lst.append("email validation error")
         if re.fullmatch(regex, email):
             obj.email = email
         else:
             lst.append("email validation error")
-        if len(num) == 10:
+        if len(str(num)) == 10:
             obj.num = num
         else:
             lst.append("number doesn't follow property")
-        if len(pnum) == 10:
+        if len(str(pnum)) == 10:
             obj.pnum = pnum
         else:
             lst.append("parent number doesn't follow property")

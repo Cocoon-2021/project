@@ -1,10 +1,14 @@
+
+
+USE RESUME;
+
 CREATE TABLE resume (
-  id TEXT,
+  id INT NOT NULL,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE resume_0 (
-  resume_id TEXT,
+  resume_id INT,
   id INT,
   coverLetter TEXT,
   enableSourceDataDownload BOOLEAN,

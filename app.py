@@ -9,8 +9,8 @@ abc=mysql.connector.connect(host="localhost",user="root",passwd="password",auth_
 db=abc.cursor()
 
 def values():
-    apiresp=requests.get("https://934f3f71-0be5-4ebc-8ce7-3f72ae4bddb6.mock.pstmn.io/resume/1")
-    api=apiresp.json()
+    responseapi=requests.get("https://934f3f71-0be5-4ebc-8ce7-3f72ae4bddb6.mock.pstmn.io/resume/1")
+    api=responseapi.json()
     return api
 
 locals().update(values())
@@ -25,12 +25,14 @@ locals().update(location)
 address,postalCode,city,countryCode,region=address,postalCode,city,countryCode,region
 profiles=profiles
 lp=len(profiles)
-network,username,url=list(),list(),list()
-for i in range(len(profiles)):
-    print(i)
-    network.append(profiles[i]['network'])
-    username.append(profiles[i]['username'])
-    url.append(profiles[i]['url'])
+net,uname,ur=list(),list(),list()
+for i in profiles:
+    locals().update(i)
+    net.append(network)
+    uname.append(username)
+    ur.append(url)
+network,username,url=net,uname,ur
+
 
 work=work
 education=education
@@ -49,24 +51,26 @@ __translation__=__translation__
 
 #db.execute("insert into data(name,contact)values(blaash,12)")
 async def homepage(request):
-    print(id,coverLetter)
+    print(id,network,username,url)
 
     
-    #sql="insert into resume(id) values(%s)
+    '''#sql="insert into resume(id) values(%s)
     #val=(id)
     #sql1="insert into resume_0(id,resume_id,coverLetter,enableSourceDataDownload) values(%s,%s,%s,%s)"
     #val1=(id,id,coverLetter,enableSourceDataDownload)
-    #sql="insert into resume(id) values (%s)"
-    val=453
-    print(val)
-    sql="insert into resume(id) values ('%d')"
-    db.execute(sql,val)
-    #db.execute("insert into resume values 7")
-    #db.execute("insert into resume_0 values(%s,%s,%s,%s)",id,id,coverLetter,enableSourceDataDownload)
+    #sql2="insert into resume(id) values (%s)"'''
+
+    '''val3=(email,image,label,name,phone)
+    print(val3)
+    sql3="insert into basics(email,image,label,name,phone,id) values(%s,%s,%s,%s,%s,%(id)s)"
+    db.execute(sql3,val3)'''
+
+    '''#db.execute("insert into resume values 7")
+    #db.execute("insert into resume_0 values(%s,%s,%s,%s)",id,id,coverLetter,enableSourceDataDownload)'''
 
     abc.commit()
 
-    return PlainTextResponse("sucess")
+    return JSONResponse({"sucess":"blash"})
 
 
 

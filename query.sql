@@ -202,7 +202,7 @@ CREATE TABLE interests_keywords (
   FOREIGN KEY (interests_id) REFERENCES interests(id)
 );
 
-CREATE TABLE references (
+CREATE TABLE `references` (
   resume_0_id INT,
   id INT,
   name TEXT,
@@ -265,7 +265,7 @@ CREATE TABLE __translation__ (
   awards TEXT,
   volunteers TEXT,
   skills TEXT,
-  references TEXT,
+  `references` TEXT,
   publications TEXT,
   languages TEXT,
   interests TEXT,

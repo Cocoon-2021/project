@@ -1,0 +1,664 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "required": [
+        "id",
+        "coverLetter",
+        "basics",
+        "work",
+        "volunteer",
+        "education",
+        "awards",
+        "publications",
+        "skills",
+        "languages",
+        "interests",
+        "references",
+        "projects",
+        "meta",
+        "__translation__",
+        "enableSourceDataDownload"
+    ],
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "coverLetter": {
+            "type": "string"
+        },
+        "basics": {
+            "type": "object",
+            "required": [
+                "name",
+                "label",
+                "image",
+                "email",
+                "phone",
+                "url",
+                "summary",
+                "location",
+                "profiles"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "object",
+                    "required": [
+                        "address",
+                        "postalCode",
+                        "city",
+                        "countryCode",
+                        "region"
+                    ],
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        },
+                        "postalCode": {
+                            "type": "string"
+                        },
+                        "city": {
+                            "type": "string"
+                        },
+                        "countryCode": {
+                            "type": "string"
+                        },
+                        "region": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": true
+                },
+                "profiles": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "additionalItems": true,
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "required": [
+                                    "network",
+                                    "username",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "network": {
+                                        "type": "string"
+                                    },
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    }
+                                },
+                                "additionalProperties": true
+                            }
+                        ]
+                    }
+                }
+            },
+            "additionalProperties": true
+        },
+        "work": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "location",
+                            "description",
+                            "position",
+                            "url",
+                            "startDate",
+                            "endDate",
+                            "summary",
+                            "highlights",
+                            "keywords"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "position": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string"
+                            },
+                            "startDate": {
+                                "type": "string"
+                            },
+                            "endDate": {
+                                "type": "string"
+                            },
+                            "summary": {
+                                "type": "string"
+                            },
+                            "highlights": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "keywords": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "volunteer": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "organization",
+                            "position",
+                            "url",
+                            "startDate",
+                            "endDate",
+                            "summary",
+                            "highlights"
+                        ],
+                        "properties": {
+                            "organization": {
+                                "type": "string"
+                            },
+                            "position": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string"
+                            },
+                            "startDate": {
+                                "type": "string"
+                            },
+                            "endDate": {
+                                "type": "string"
+                            },
+                            "summary": {
+                                "type": "string"
+                            },
+                            "highlights": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "education": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "institution",
+                            "url",
+                            "area",
+                            "studyType",
+                            "startDate",
+                            "endDate",
+                            "score",
+                            "courses"
+                        ],
+                        "properties": {
+                            "institution": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string"
+                            },
+                            "area": {
+                                "type": "string"
+                            },
+                            "studyType": {
+                                "type": "string"
+                            },
+                            "startDate": {
+                                "type": "string"
+                            },
+                            "endDate": {
+                                "type": "string"
+                            },
+                            "score": {
+                                "type": "string"
+                            },
+                            "courses": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "awards": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "title",
+                            "date",
+                            "awarder",
+                            "summary"
+                        ],
+                        "properties": {
+                            "title": {
+                                "type": "string"
+                            },
+                            "date": {
+                                "type": "string"
+                            },
+                            "awarder": {
+                                "type": "string"
+                            },
+                            "summary": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "publications": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "publisher",
+                            "releaseDate",
+                            "url",
+                            "summary"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "publisher": {
+                                "type": "string"
+                            },
+                            "releaseDate": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string"
+                            },
+                            "summary": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "skills": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "level",
+                            "keywords"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "level": {
+                                "type": "string"
+                            },
+                            "keywords": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "languages": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "language",
+                            "fluency"
+                        ],
+                        "properties": {
+                            "language": {
+                                "type": "string"
+                            },
+                            "fluency": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "interests": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "keywords"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "keywords": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "references": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "reference"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "reference": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "projects": {
+            "type": "array",
+            "uniqueItems": true,
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "description",
+                            "highlights",
+                            "keywords",
+                            "startDate",
+                            "endDate",
+                            "url",
+                            "roles",
+                            "entity",
+                            "type"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "highlights": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "keywords": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "startDate": {
+                                "type": "string"
+                            },
+                            "endDate": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "entity": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        },
+        "meta": {
+            "type": "object",
+            "required": [
+                "canonical",
+                "version",
+                "lastModified"
+            ],
+            "properties": {
+                "canonical": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "lastModified": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true
+        },
+        "__translation__": {
+            "type": "object",
+            "required": [
+                "awards",
+                "volunteers",
+                "skills",
+                "references",
+                "publications",
+                "languages",
+                "interests",
+                "education",
+                "summary",
+                "experience",
+                "at"
+            ],
+            "properties": {
+                "awards": {
+                    "type": "string"
+                },
+                "volunteers": {
+                    "type": "string"
+                },
+                "skills": {
+                    "type": "string"
+                },
+                "references": {
+                    "type": "string"
+                },
+                "publications": {
+                    "type": "string"
+                },
+                "languages": {
+                    "type": "string"
+                },
+                "interests": {
+                    "type": "string"
+                },
+                "education": {
+                    "type": "string"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "experience": {
+                    "type": "string"
+                },
+                "at": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true
+        },
+        "enableSourceDataDownload": {
+            "type": "boolean"
+        }
+    },
+    "additionalProperties": true
+}

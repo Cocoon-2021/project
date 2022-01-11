@@ -1,23 +1,17 @@
+CREATE DATABASE resumedata;
 
+USE resumedata;
 
-USE RESUME;
 
 CREATE TABLE resume (
-  id INT NOT NULL,
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE resume_0 (
-  resume_id INT,
   id INT,
   coverLetter TEXT,
   enableSourceDataDownload BOOLEAN,
-  PRIMARY KEY (id),
-  FOREIGN KEY (resume_id) REFERENCES resume(id)
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE basics (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   name TEXT,
   label TEXT,
@@ -27,7 +21,7 @@ CREATE TABLE basics (
   url TEXT,
   summary TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE basics_location (
@@ -53,7 +47,7 @@ CREATE TABLE basics_profiles (
 );
 
 CREATE TABLE work (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   name TEXT,
   location TEXT,
@@ -64,7 +58,7 @@ CREATE TABLE work (
   endDate TEXT,
   summary TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE work_highlights (
@@ -84,7 +78,7 @@ CREATE TABLE work_keywords (
 );
 
 CREATE TABLE volunteer (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   organization TEXT,
   position TEXT,
@@ -93,7 +87,7 @@ CREATE TABLE volunteer (
   endDate TEXT,
   summary TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE volunteer_highlights (
@@ -105,7 +99,7 @@ CREATE TABLE volunteer_highlights (
 );
 
 CREATE TABLE education (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   institution TEXT,
   url TEXT,
@@ -115,7 +109,7 @@ CREATE TABLE education (
   endDate TEXT,
   score TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE education_courses (
@@ -127,29 +121,29 @@ CREATE TABLE education_courses (
 );
 
 CREATE TABLE awards (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   title TEXT,
   date TEXT,
   awarder TEXT,
   summary TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE certificates (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   name TEXT,
   date TEXT,
   url TEXT,
   issuer TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE publications (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   name TEXT,
   publisher TEXT,
@@ -157,16 +151,16 @@ CREATE TABLE publications (
   url TEXT,
   summary TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE skills (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   name TEXT,
   level TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE skills_keywords (
@@ -178,20 +172,20 @@ CREATE TABLE skills_keywords (
 );
 
 CREATE TABLE languages (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   language TEXT,
   fluency TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE interests (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   name TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE interests_keywords (
@@ -203,16 +197,16 @@ CREATE TABLE interests_keywords (
 );
 
 CREATE TABLE `references` (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   name TEXT,
   reference TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE projects (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   name TEXT,
   description TEXT,
@@ -222,7 +216,7 @@ CREATE TABLE projects (
   entity TEXT,
   type TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE projects_highlights (
@@ -250,17 +244,17 @@ CREATE TABLE projects_roles (
 );
 
 CREATE TABLE meta (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   canonical TEXT,
   version TEXT,
   lastModified TIMESTAMP,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );
 
 CREATE TABLE __translation__ (
-  resume_0_id INT,
+  resume_id INT,
   id INT,
   awards TEXT,
   volunteers TEXT,
@@ -274,5 +268,5 @@ CREATE TABLE __translation__ (
   experience TEXT,
   at TEXT,
   PRIMARY KEY (id),
-  FOREIGN KEY (resume_0_id) REFERENCES resume_0(id)
+  FOREIGN KEY (resume_id) REFERENCES resume(id)
 );

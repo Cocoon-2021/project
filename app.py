@@ -32,18 +32,19 @@ async def dataIn(apival):
     print(checkList)
     if len(checkList) == 0:
         print("no validation isuee")
-        await valueInsertion()
+        await valueInsertion(apival)
     else:
         print(checkList)
 
     return checkList
 
+
+
 async def valueInsertion(apival):
     id = apival["id"]
     coverLetter = apival["coverLetter"]
-    ESDD = apival["enableSourceDataDownload"]
-    resume_id = id
-    connect.execute(f"insert into resume values({resume_id},'{coverLetter}','{ESDD}')")
+    resumeId = id
+    connect.execute(f"insert into resume values({resumeId},'{coverLetter}')")
 
 
     basicsName = apival["basics"]["name"]
@@ -53,9 +54,9 @@ async def valueInsertion(apival):
     basicsPhone = apival["basics"]["phone"]
     basicsUrl = apival["basics"]["url"]
     basicsSummary = apival["basics"]["summary"]
-    bId = 1
-    connect.execute(f"insert into basics values({resume_id},{bId},'{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
-    bId = bId + 1
+
+    connect.execute(f"insert into basics values({resumeId},'{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
+
 
 
     locationAddress = apival["basics"]["location"]["address"]
@@ -63,23 +64,18 @@ async def valueInsertion(apival):
     locationCity = apival["basics"]["location"]["city"]
     locationCountyCode = apival["basics"]["location"]["countryCode"]
     locationRegion = apival["basics"]["location"]["region"]
-    basicsId = 1
-    connect.execute(f"insert into basics_location values({basicsId},{id},'{locationAddress}','{locationPostalCode}','{locationCity}','{locationCountyCode}','{locationRegion}')")
+    connect.execute(f"insert into basics_location values({resumeId},'{locationAddress}','{locationPostalCode}','{locationCity}','{locationCountyCode}','{locationRegion}')")
 
 
     profiles = apival["basics"]["profiles"]
-    bpId=1
     for i in profiles:
         bp_network = i["network"]
         bp_username = i["username"]
         bp_url = i["url"]
-        bpId = bpId + 1
-        connect.execute(f"insert into basics_profiles values({basicsId},{bpId},'{bp_network}','{bp_username}','{bp_url}')")
-    basicsId = basicsId + 1
+        connect.execute(f"insert into basics_profiles values({resumeId},'{bp_network}','{bp_username}','{bp_url}')")
 
 
     work = apival["work"]
-    wId = 1
     for i in work:
         workName = i["name"]
         workLocation = i["location"]
@@ -91,22 +87,16 @@ async def valueInsertion(apival):
         workSummary = i["summary"]
         workHighlights = i["highlights"]
         workKeywords = i["keywords"]
-        connect.execute(f"insert into work values({resume_id},{wId},'{workName}','{workLocation}','{workDescription}','{workPosition}','{workUrl}','{workStartDate}','{workEndDate}','{workSummary}')")
-        whId = 1
-        wkId = 1
+        connect.execute(f"insert into work values({resumeId},'{workName}','{workLocation}','{workDescription}','{workPosition}','{workUrl}','{workStartDate}','{workEndDate}','{workSummary}')")
         for m in workHighlights:
             highValues = m
-            connect.execute(f"insert into work_highlights values({wId},{whId},'{highValues}')")
-            whId = whId+1
+            connect.execute(f"insert into work_highlights values({resumeId},'{highValues}')")
         for n in workKeywords:
             workKeywordsVal = n
-            connect.execute(f"insert into work_keywords values({wId},{wkId},'{workKeywordsVal}')")
-            wkId = wkId + 1
-        wId = wId+1
+            connect.execute(f"insert into work_keywords values({resumeId},'{workKeywordsVal}')")
 
 
     volunteer=apival["volunteer"]
-    vId = 1
     for i in volunteer:
         volunteerOrganization = i["organization"]
         volunteerPosition = i["position"]
@@ -115,18 +105,14 @@ async def valueInsertion(apival):
         volunteerEndDate = i["endDate"]
         volunteerSummary = i["summary"]
         volunteerHighlights = i["highlights"]
-        connect.execute(f"insert into volunteer values({resume_id},{vId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
-        vhId = 1
+        connect.execute(f"insert into volunteer values({resumeId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
         for m in volunteerHighlights:
             vHighValues = m
             print(vHighValues)
-            #connect.execute(f"insert into volunteer_highlights values({vId},{vhId},'{vHighValues}')")
-            vhId = vhId + 1
-        vId = vId + 1
+            connect.execute(f"insert into volunteer_highlights values({resumeId},%s)",vHighValues)
 
 
     education = apival["education"]
-    eduId = 1
     for i in education:
         educationInstitution = i["institution"]
         educationUrl = i["url"]
@@ -136,87 +122,69 @@ async def valueInsertion(apival):
         educationEndDate = i["endDate"]
         educationScore = i["score"]
         educationCourses = i["courses"]
-        connect.execute(f"insert into education values({resume_id},{eduId},'{educationInstitution}','{educationUrl}','{educationArea}','{educationStudyType}','{educationStartDate}','{educationEndDate}','{educationScore}')")
-        edHiId = 1
+        connect.execute(f"insert into education values({resumeId},'{educationInstitution}','{educationUrl}','{educationArea}','{educationStudyType}','{educationStartDate}','{educationEndDate}','{educationScore}')")
         for m in educationCourses:
             eduCourse = m
-            connect.execute(f"insert into education_courses values({eduId},{edHiId},'{eduCourse}')")
-            edHiId = edHiId + 1
+            connect.execute(f"insert into education_courses values({resumeId},'{eduCourse}')")
 
 
     awards=apival["awards"]
-    aId = 1
     for i in awards:
         awardsTitle=i["title"]
         awardsDate=i["date"]
         awardsAwarder=i["awarder"]
         awardsSummary=i["summary"]
-        connect.execute(f"insert into awards values({resume_id},{aId},'{awardsTitle}','{awardsDate}','{awardsAwarder}','{awardsSummary}')")
-        aId = aId + 1
+        connect.execute(f"insert into awards values({resumeId},'{awardsTitle}','{awardsDate}','{awardsAwarder}','{awardsSummary}')")
 
 
 
     publications = apival["publications"]
-    pId = 1
     for i in publications:
         pubName = i["name"]
         pubPublisher = i["publisher"]
         pubReleaseDate = i["releaseDate"]
         pubUrl = i["url"]
         pubSummary = i["summary"]
-        connect.execute(f"insert into publications values({resume_id},{pId},'{pubName}','{pubPublisher}','{pubReleaseDate}','{pubUrl}','{pubSummary}')")
-        pId = pId + 1
+        connect.execute(f"insert into publications values({resumeId},'{pubName}','{pubPublisher}','{pubReleaseDate}','{pubUrl}','{pubSummary}')")
 
 
 
     skills = apival["skills"]
-    sId = 1
     for i in skills:
         skillName = i["name"]
         skilLevel = i["level"]
         skillKeywords = i["keywords"]
-        connect.execute(f"insert into skills values({resume_id},{sId},'{skillName}','{skilLevel}')")
+        connect.execute(f"insert into skills values({resumeId},'{skillName}','{skilLevel}')")
         for n in skillKeywords:
             keywordValues = n
-            sKId = 1
-            #connect.execute(f"insert into skills_keywords values({sId},{sKId},'{keywordValues}')")
-            skId = sKId + 1
-        sId = sId + 1
+            connect.execute(f"insert into skills_keywords values({resumeId},'{keywordValues}')")
 
 
 
     languages = apival["languages"]
-    langId = 1
     for i in languages:
         langLanguage = i["language"]
         langFluency = i["fluency"]
-        connect.execute(f"insert into languages values({resume_id},{langId},'{langLanguage}','{langFluency}')")
-        langId = langId + 1
+        connect.execute(f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
 
 
     interests = apival["interests"]
-    intrId = 1
-    intrKeyId = 1
     for i in interests:
         interestsName = i["name"]
         interestsKeyWord = i["keywords"]
-        connect.execute(f"insert into interests values({resume_id},{intrId},'{interestsName}')")
+        connect.execute(f"insert into interests values({resumeId},'{interestsName}')")
 
         for n in interestsKeyWord:
             intrKeywords = n
-            connect.execute(f"insert into interests_keywords values({intrId},{intrKeyId},'{intrKeywords}')")
-            intrKeyId = intrKeyId + 1
-        intrId = intrId + 1
+            connect.execute(f"insert into interests_keywords values({resumeId},'{intrKeywords}')")
 
 
 
     references = apival["references"]
-    refId = 1
     for i in references:
         refName = i["name"]
         refReference = i["reference"]
-        #connect.execute(f"insert into references values({resume_id},{refId},'{refName}','{refReference}')")
-        refId = refId + 1
+        connect.execute(f"insert into `references` values({resumeId},'{refName}','{refReference}')")
 
 
     id = id + 1
@@ -226,14 +194,208 @@ async def valueInsertion(apival):
 
 
 def fetchData():
-    testDict = dict()
-    outPut = connect.execute("select resume.id,resume.coverLetter,basics.name,basics.label,basics.image from resume inner join basics on resume.id = basics.resume_id " ).fetchall()
-    qResult = [dict(row) for row in outPut]
-    # print({json.dumps(outPut)})
-    return qResult
+    outResult=connect.execute("select resume.id,resume.coverLetter,basics.name,basics.label,basics.image,basics.email,basics.phone,basics.url,basics.summary,basics_location.address,basics_location.postalCode,basics_location.city,basics_location.countryCode,basics_location.region,basics_profiles.network,basics_profiles.username,basics_profiles.url from resume inner join basics inner join basics_location inner join basics_profiles on resume.id=basics.resume_id and resume.id = basics_location.resume_id and resume.id = basics_profiles.resume_id;").fetchall()
+    bpResult = connect.execute("select basics_profiles.network,basics_profiles.username,basics_profiles.url from basics_profiles,resume where basics_profiles.resume_id = resume.id ").fetchall()
+    wrResults = connect.execute("select * from work").fetchall()
+    whResults = connect.execute("select * from work_highlights").fetchall()
+    wkResults = connect.execute("select * from work_keywords").fetchall()
+    vResults = connect.execute("select * from volunteer").fetchall()
+    vhResults = connect.execute("select * from volunteer_highlights").fetchall()
+    eResults = connect.execute("select * from education").fetchall()
+    ecResults = connect.execute("select * from education_courses").fetchall()
+    awResults = connect.execute("select * from awards").fetchall()
+    pResults = connect.execute("select * from publications").fetchall()
+    cResults = connect.execute("select * from certificates").fetchall()
+    sResults = connect.execute("select * from skills").fetchall()
+    skResults = connect.execute("select * from skills_keywords").fetchall()
+    lResults = connect.execute("select * from languages").fetchall()
+    iResults = connect.execute("select * from interests").fetchall()
+    ikResults = connect.execute("select * from interests_keywords").fetchall()
+    rResults = connect.execute("select * from `references`").fetchall()
+    proResults = connect.execute("select * from projects").fetchall()
+    prohResults = connect.execute("select * from projects_highlights").fetchall()
+    prokResults = connect.execute("select * from projects_keywords").fetchall()
+    prorResults = connect.execute("select * from projects_roles").fetchall()
 
 
-#db.execute("insert into data(name,contact)values(blaash,12)")
+    content = [
+            {
+                "id":i["id"],
+                "coverLetter": i["coverLetter"],
+                "basics":{
+                    "name":i["name"],
+                    "label":i["label"],
+                    "image":i["image"],
+                    "email":i["email"],
+                    "phone":i["phone"],
+                    "url":i["summary"],
+                    "location":{
+                        "address":i["address"],
+                        "postalCode":i["postalCode"],
+                        "city":i["city"],
+                        "countryCode":i["countryCode"],
+                        "region":i["region"]
+                    },
+                    "profiles":[
+                        {
+                        "network":p["network"],
+                        "username":p["username"],
+                        "url":p["url"]
+                    }
+                    for p in bpResult
+                ]
+                },
+                "work":[
+                    {
+                        "name":w["name"],
+                        "location":w["location"],
+                        "description":w["description"],
+                        "position":w["position"],
+                        "url":w["url"],
+                        "startDate":w["startDate"],
+                        "endDate":w["endDate"],
+                        "summary":w["summary"],
+                        "highlights":[
+                                wh["value"]
+                            for wh in whResults
+                        ],
+                        "keywords":[
+                            wk["value"]
+                            for wk in wkResults
+                        ]
+                    }
+                    for w in wrResults
+                ],
+                "volunteer":[
+                    {
+                        "organization":v["organization"],
+                        "position":v["position"],
+                        "url":v["url"],
+                        "startDate":v["startDate"],
+                        "endDate":v["endDate"],
+                        "summary":v["summary"],
+                        "highlights":[
+                            vh["value"]
+                            for vh in vhResults
+                        ]
+                    }
+                    for v in vResults
+                ],
+                "education":[
+                    {
+                        "institution":e["institution"],
+                        "url":e["url"],
+                        "area":e["area"],
+                        "studyType":e["studyType"],
+                        "startDate":e["startDate"],
+                        "endDate": e["endDate"],
+                        "score": e["score"],
+                        "courses":[
+                            ec["value"]
+                            for ec in ecResults
+                        ]
+                        
+                    }
+                    for e in eResults
+                ],
+                "awards":[
+                    {
+                        "title":a["title"],
+                        "date":a["date"],
+                        "awarder":a["awarder"],
+                        "summary":a["summary"]
+                    }
+                    for a in awResults
+                ],
+                "certificates":[
+                    {
+                        "name":c["name"],
+                        "date":c["date"],
+                        "url":c["url"],
+                        "issuer":["issuer"]
+                    }
+                    for c in cResults
+                ],
+                "publications":[
+                    {
+                        "name":p["name"],
+                        "publisher":p["publisher"],
+                        "releaseDate":p["releaseDate"],
+                        "url":p["url"],
+                        "summary":p["summary"]
+                    }
+                    for p in pResults
+                ],
+                "skills":[
+                    {
+                        "name":s["name"],
+                        "level":s["level"],
+                        "keywords":[
+                            sk["value"]
+                            for sk in skResults
+                        ]
+                    }
+                    for s in sResults
+                ],
+                "languages":[
+                    {
+                        "language":l["language"],
+                        "fluency":l["fluency"]
+                    }
+                    for l in lResults
+                ],
+                "interests":[
+                    {
+                        "name":i["name"],
+                        "keywords":[
+                            ik["value"]
+                            for ik in ikResults
+                        ]
+                    }
+                    for i in iResults
+                ],
+                "references":[
+                    {
+                        "name":r["name"],
+                        "reference":r["reference"]
+                    }
+                    for r in rResults
+                ],
+                "projects":[
+                    {
+                        "name":pr["name"],
+                        "description":pr["description"],
+                        "highlights":[
+                            prh["value"]
+                            for prh in prohResults
+                        ],
+                        "keywords":[
+                            prk["value"]
+                            for prk in prokResults
+                        ],
+                        "startDate":pr["startDate"],
+                        "endDate":pr["endDate"],
+                        "url":pr["url"],
+                        "roles":[
+                            prro["value"]
+                            for prro in prorResults
+                        ],
+                        "enitity":pr["entity"],
+                        "type":pr["type"]
+
+                    }
+                    for pr in proResults
+                ]
+
+
+                
+            }
+            for i in outResult
+    ]
+    return content
+
+
+
 async def homepage(request):
     
     jsonout = fetchData()
@@ -245,7 +407,7 @@ async def homepage(request):
 async def homepost(request):
     global apival
     apival = await request.json()
-    await valueInsertion(apival)
+    await dataIn(apival)
 
 
 

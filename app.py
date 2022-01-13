@@ -1,10 +1,4 @@
-from os import name
-from mysql.connector.abstracts import MySQLConnectionAbstract
-from requests import api
-from requests.api import post, get
 from sqlalchemy import schema
-from sqlalchemy.sql.expression import insert, intersect, label
-from sqlalchemy.util.langhelpers import portable_instancemethod
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.requests import Request
@@ -20,11 +14,6 @@ print(connect)
 with open('schema.json') as sc:
     schema = json.load(sc)
 
-
-# async def value():
-#     responseapi = get("https://934f3f71-0be5-4ebc-8ce7-3f72ae4bddb6.mock.pstmn.io/resume/1")
-#     api = responseapi.json()
-#     return api
 
 async def dataIn(apival):
     validator = Draft7Validator(schema)
@@ -54,7 +43,6 @@ async def valueInsertion(apival):
     basicsPhone = apival["basics"]["phone"]
     basicsUrl = apival["basics"]["url"]
     basicsSummary = apival["basics"]["summary"]
-
     connect.execute(f"insert into basics values({resumeId},'{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
 
 
@@ -108,7 +96,6 @@ async def valueInsertion(apival):
         connect.execute(f"insert into volunteer values({resumeId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
         for m in volunteerHighlights:
             vHighValues = m
-            print(vHighValues)
             connect.execute(f"insert into volunteer_highlights values({resumeId},%s)",vHighValues)
 
 

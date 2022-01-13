@@ -185,6 +185,33 @@ async def valueInsertion(apival):
         refName = i["name"]
         refReference = i["reference"]
         connect.execute(f"insert into `references` values({resumeId},'{refName}','{refReference}')")
+    
+
+    projects = apival["projects"]
+    for i in projects:
+        projectName = i["name"]
+        projectDescription = i["description"]
+        projectStartDate = i["startDate"]
+        projectEndDate = i["endDate"]
+        projectUrl = i["url"]
+        projectEntity = i["entity"]
+        projectType = i["type"]
+        projectHighlights = i["highlights"]
+        projectKeywords = i["keywords"]
+        projectRoles = i["roles"]
+        connect.execute(f"insert into projects values({resumeId},'{projectName}','{projectDescription}','{projectStartDate}','{projectEndDate}','{projectUrl}','{projectEntity}','{projectType}')")
+        for n in projectHighlights:
+            projectHighValues = n
+            connect.execute(f"insert into projects_highlights values({resumeId},'{projectHighValues}')")
+        
+        for m in projectKeywords:
+            projectKeyValues = m
+            connect.execute(f"insert into projects_keywords values({resumeId},'{projectKeyValues}')")
+
+        for r in  projectRoles:
+            projectRolesValues = r
+            connect.execute(f"insert into projects_roles values({resumeId},'{projectRolesValues}')")
+
 
 
     id = id + 1
@@ -195,7 +222,7 @@ async def valueInsertion(apival):
 
 def fetchData():
     outResult=connect.execute("select resume.id,resume.coverLetter,basics.name,basics.label,basics.image,basics.email,basics.phone,basics.url,basics.summary,basics_location.address,basics_location.postalCode,basics_location.city,basics_location.countryCode,basics_location.region,basics_profiles.network,basics_profiles.username,basics_profiles.url from resume inner join basics inner join basics_location inner join basics_profiles on resume.id=basics.resume_id and resume.id = basics_location.resume_id and resume.id = basics_profiles.resume_id;").fetchall()
-    bpResult = connect.execute("select basics_profiles.network,basics_profiles.username,basics_profiles.url from basics_profiles,resume where basics_profiles.resume_id = resume.id ").fetchall()
+    bpResult = connect.execute("select basics_profiles.resume_id,basics_profiles.network,basics_profiles.username,basics_profiles.url from basics_profiles,resume where basics_profiles.resume_id = resume.id ").fetchall()
     wrResults = connect.execute("select * from work").fetchall()
     whResults = connect.execute("select * from work_highlights").fetchall()
     wkResults = connect.execute("select * from work_keywords").fetchall()
@@ -243,6 +270,7 @@ def fetchData():
                         "url":p["url"]
                     }
                     for p in bpResult
+                    if p["resume_id"] == i["id"]
                 ]
                 },
                 "work":[
@@ -258,13 +286,16 @@ def fetchData():
                         "highlights":[
                                 wh["value"]
                             for wh in whResults
+                            if wh["resume_id"] == i["id"]
                         ],
                         "keywords":[
                             wk["value"]
                             for wk in wkResults
+                            if wk["resume_id"] == i["id"]
                         ]
                     }
                     for w in wrResults
+                    if w["resume_id"] == i["id"]
                 ],
                 "volunteer":[
                     {
@@ -277,9 +308,11 @@ def fetchData():
                         "highlights":[
                             vh["value"]
                             for vh in vhResults
+                            if vh["resume_id"] == i["id"]
                         ]
                     }
                     for v in vResults
+                    if v["resume_id"] == i["id"]
                 ],
                 "education":[
                     {
@@ -293,10 +326,12 @@ def fetchData():
                         "courses":[
                             ec["value"]
                             for ec in ecResults
+                            if ec["resume_id"] == i["id"]
                         ]
                         
                     }
                     for e in eResults
+                    if e["resume_id"] == i["id"]
                 ],
                 "awards":[
                     {
@@ -306,6 +341,7 @@ def fetchData():
                         "summary":a["summary"]
                     }
                     for a in awResults
+                    if a["resume_id"] == i["id"]
                 ],
                 "certificates":[
                     {
@@ -315,6 +351,7 @@ def fetchData():
                         "issuer":["issuer"]
                     }
                     for c in cResults
+                    if c["resume_id"] == i["id"]
                 ],
                 "publications":[
                     {
@@ -325,6 +362,7 @@ def fetchData():
                         "summary":p["summary"]
                     }
                     for p in pResults
+                    if p["resume_id"] == i["id"]
                 ],
                 "skills":[
                     {
@@ -333,9 +371,11 @@ def fetchData():
                         "keywords":[
                             sk["value"]
                             for sk in skResults
+                            if sk["resume_id"] == i["id"]
                         ]
                     }
                     for s in sResults
+                    if s["resume_id"] == i["id"]
                 ],
                 "languages":[
                     {
@@ -343,16 +383,19 @@ def fetchData():
                         "fluency":l["fluency"]
                     }
                     for l in lResults
+                    if l["resume_id"] == i["id"]
                 ],
                 "interests":[
                     {
-                        "name":i["name"],
+                        "name":intra["name"],
                         "keywords":[
                             ik["value"]
                             for ik in ikResults
+                            if ik["resume_id"] == i["id"]
                         ]
                     }
-                    for i in iResults
+                    for intra in iResults
+                    if intra["resume_id"] == i["id"]
                 ],
                 "references":[
                     {
@@ -360,6 +403,7 @@ def fetchData():
                         "reference":r["reference"]
                     }
                     for r in rResults
+                    if r["resume_id"] == i["id"]
                 ],
                 "projects":[
                     {
@@ -368,10 +412,12 @@ def fetchData():
                         "highlights":[
                             prh["value"]
                             for prh in prohResults
+                            if prh["resume_id"] == i["id"]
                         ],
                         "keywords":[
                             prk["value"]
                             for prk in prokResults
+                            if prk["resume_id"] == i["id"]
                         ],
                         "startDate":pr["startDate"],
                         "endDate":pr["endDate"],
@@ -379,16 +425,15 @@ def fetchData():
                         "roles":[
                             prro["value"]
                             for prro in prorResults
+                            if prro["resume_id"] == i["id"]
                         ],
                         "enitity":pr["entity"],
                         "type":pr["type"]
 
                     }
                     for pr in proResults
-                ]
-
-
-                
+                    if pr["resume_id"] == i["id"]
+                ]        
             }
             for i in outResult
     ]

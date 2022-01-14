@@ -6,7 +6,7 @@ USE resumedata;
 
 
 CREATE TABLE resume (
-  id INT,
+  id INT AUTO_INCREMENT,
   coverLetter TEXT,
   PRIMARY KEY (id)
 );

@@ -18,7 +18,6 @@ with open('schema.json') as sc:
 async def dataIn(apival):
     validator = Draft7Validator(schema)
     checkList = list(validator.iter_errors(apival))
-    print(checkList)
     if len(checkList) == 0:
         print("no validation isuee")
         await firstInsert(apival)

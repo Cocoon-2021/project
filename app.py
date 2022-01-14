@@ -19,7 +19,7 @@ async def dataIn(apival):
     validator = Draft7Validator(schema)
     checkList = list(validator.iter_errors(apival))
     if len(checkList) == 0:
-        print("no validation isuee")
+        print("no validation issue")
         await firstInsert(apival)
         await workInsert(apival)
         await volInsert(apival)

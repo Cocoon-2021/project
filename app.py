@@ -1,6 +1,6 @@
 from sqlalchemy import schema
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse,HTMLResponse,PlainTextResponse
 from starlette.requests import Request
 from starlette.routing import Route
 from jsonschema import Draft7Validator
@@ -237,6 +237,7 @@ async def dataIn(apival):
         await pubInsert(apival)
         await lanInsert(apival)
         await projectInsert(apival)
+        checkList.append("no validation issue")
     else:
         print(checkList)
 
@@ -697,12 +698,10 @@ async def homepage(request):
 async def homepost(request):
     global apival
     apival = await request.json()
-    await dataIn(apival)
+    dataInVal = await dataIn(apival)
 
 
-
-
-    return JSONResponse("Databases insertiondone")
+    return JSONResponse(str(dataInVal))
 
 
 app = Starlette(debug=True,  routes=[

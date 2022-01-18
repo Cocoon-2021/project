@@ -15,27 +15,6 @@ with open('schema.json') as sc:
     schema = json.load(sc)
 
 
-async def dataIn(apival):
-    validator = Draft7Validator(schema)
-    checkList = list(validator.iter_errors(apival))
-    if len(checkList) == 0:
-        print("no validation issue")
-        await firstInsert(apival)
-        await workInsert(apival)
-        await volInsert(apival)
-        await eduInsert(apival)
-        await awardsInsert(apival)
-        await skillInsert(apival)
-        await pubInsert(apival)
-        await lanInsert(apival)
-        await projectInsert(apival)
-    else:
-        print(checkList)
-
-    return checkList
-
-
-
 async def firstInsert(apival):
     scsRate="basics and resume table done"
     id = apival["id"]
@@ -244,10 +223,28 @@ async def projectInsert(apival):
     return scsRate
 
 
+async def dataIn(apival):
+    validator = Draft7Validator(schema)
+    checkList = list(validator.iter_errors(apival))
+    if len(checkList) == 0:
+        print("no validation issue")
+        await firstInsert(apival)
+        await workInsert(apival)
+        await volInsert(apival)
+        await eduInsert(apival)
+        await awardsInsert(apival)
+        await skillInsert(apival)
+        await pubInsert(apival)
+        await lanInsert(apival)
+        await projectInsert(apival)
+    else:
+        print(checkList)
+
+    return checkList
 
 
 def fetchData():
-    outResult=connect.execute("select * from resume inner join basics_location on resume.id =basics_location.resumeId;").fetchall()
+    outResult=connect.execute("select * from resume inner join basics_location on resume.id = basics_location.resumeId;").fetchall()
     bpResult = connect.execute("select * from basics_profiles").fetchall()
     wrResults = connect.execute("select * from work").fetchall()
     whResults = connect.execute("select * from work_highlights").fetchall()
@@ -694,8 +691,6 @@ async def parmPass(request):
 async def homepage(request):
     
     jsonout = fetchData()
-    print(jsonout)
-
 
     return JSONResponse(jsonout)
 
@@ -707,7 +702,7 @@ async def homepost(request):
 
 
 
-    return JSONResponse("blash")
+    return JSONResponse("Databases insertiondone")
 
 
 app = Starlette(debug=True,  routes=[

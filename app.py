@@ -1,6 +1,6 @@
 from sqlalchemy import schema
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse,HTMLResponse,PlainTextResponse
+from starlette.responses import JSONResponse
 from starlette.requests import Request
 from starlette.routing import Route
 from jsonschema import Draft7Validator
@@ -237,9 +237,10 @@ async def dataIn(apival):
         await pubInsert(apival)
         await lanInsert(apival)
         await projectInsert(apival)
-        checkList.append("no validation issue")
+        checkList = apival
     else:
         print(checkList)
+        checkList = str(checkList)
 
     return checkList
 
@@ -688,12 +689,11 @@ async def parmPass(request):
     return JSONResponse( content2)
 
 
-
 async def homepage(request):
-    
     jsonout = fetchData()
 
     return JSONResponse(jsonout)
+
 
 async def homepost(request):
     global apival
@@ -701,11 +701,11 @@ async def homepost(request):
     dataInVal = await dataIn(apival)
 
 
-    return JSONResponse(str(dataInVal))
+    return JSONResponse(dataInVal)
 
 
 app = Starlette(debug=True,  routes=[
     Route('/', homepage, methods=['GET']),
     Route('/', homepost, methods=['POST']),
-    Route('/{pid:int}',parmPass, methods=['GET'])
+    Route('/{pid:int}',parmPass, methods=['GET']),
 ])

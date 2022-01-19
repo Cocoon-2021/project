@@ -281,6 +281,7 @@ def fetchData():
                     "email":i["email"],
                     "phone":i["phone"],
                     "url":i["summary"],
+                    "summary":i["summary"],
                     "location":{
                         "address":i["address"],
                         "postalCode":i["postalCode"],
@@ -452,7 +453,7 @@ def fetchData():
                             for prro in prorResults
                             if prro["resumeId"] == i["id"]
                         ],
-                        "enitity":pr["entity"],
+                        "entity":pr["entity"],
                         "type":pr["type"]
 
                     }
@@ -503,6 +504,7 @@ async def parmPass(request):
                     "email":i["email"],
                     "phone":i["phone"],
                     "url":i["summary"],
+                    "summary":i["summary"],
                     "location":{
                         "address":i["address"],
                         "postalCode":i["postalCode"],
@@ -674,7 +676,7 @@ async def parmPass(request):
                             for prro in prorResults
                             if prro["resumeId"] == i["id"]
                         ],
-                        "enitity":pr["entity"],
+                        "entity":pr["entity"],
                         "type":pr["type"]
 
                     }

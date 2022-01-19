@@ -4,13 +4,10 @@
     "required": [
         "basics",
         "work",
-        "volunteer",
         "education",
-        "awards",
-        "publications",
+        "certificates",
         "skills",
         "interests",
-        "references",
         "projects"
     ],
     "properties": {

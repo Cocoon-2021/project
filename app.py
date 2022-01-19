@@ -372,7 +372,7 @@ def fetchData():
                         "name":c["name"],
                         "date":c["date"],
                         "url":c["url"],
-                        "issuer":["issuer"]
+                        "issuer":c["issuer"]
                     }
                     for c in cResults
                     if c["resumeId"] == i["id"]
@@ -594,7 +594,7 @@ async def parmPass(request):
                         "name":c["name"],
                         "date":c["date"],
                         "url":c["url"],
-                        "issuer":["issuer"]
+                        "issuer":c["issuer"]
                     }
                     for c in cResults
                     if c["resumeId"] == i["id"]

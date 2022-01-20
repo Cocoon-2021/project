@@ -29,7 +29,8 @@
             ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 25
                 },
                 "label": {
                     "type": "string"
@@ -50,7 +51,8 @@
                     "type": "string"
                 },
                 "summary": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 750
                 },
                 "location": {
                     "type": "object",

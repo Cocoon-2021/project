@@ -18,7 +18,8 @@ CREATE TABLE resume (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE basics_location (
+CREATE TABLE basics_location 
+(
   resumeId INT,
   address TEXT,
   postalCode TEXT,
@@ -28,7 +29,8 @@ CREATE TABLE basics_location (
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE basics_profiles (
+CREATE TABLE basics_profiles 
+(
   resumeId INT,
   network TEXT,
   username TEXT,
@@ -36,7 +38,8 @@ CREATE TABLE basics_profiles (
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE work (
+CREATE TABLE work 
+(
   resumeId INT,
   name TEXT,
   location TEXT,
@@ -49,7 +52,8 @@ CREATE TABLE work (
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE work_highlights (
+CREATE TABLE work_highlights 
+(
   resumeId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
@@ -57,11 +61,13 @@ CREATE TABLE work_highlights (
 
 CREATE TABLE work_keywords (
   resumeId INT,
+
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE volunteer (
+CREATE TABLE volunteer 
+(
   resumeId INT,
   organization TEXT,
   position TEXT,
@@ -72,13 +78,15 @@ CREATE TABLE volunteer (
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE volunteer_highlights (
+CREATE TABLE volunteer_highlights 
+(
   resumeId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE education (
+CREATE TABLE education 
+(
   resumeId INT,
   institution TEXT,
   url TEXT,
@@ -90,22 +98,25 @@ CREATE TABLE education (
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE education_courses (
+CREATE TABLE education_courses 
+(
   resumeId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE awards (
+CREATE TABLE awards 
+(
   resumeId INT,
   title TEXT,
   date TEXT,
   awarder TEXT,
   summary TEXT,
-  FOREIGN KEY (resumeId) REFERENCES resume(id)
+  FOREIGN KEY (resumeId) REFERENCES resume(id)  
 );
 
-CREATE TABLE certificates (
+CREATE TABLE certificates 
+(
   resumeId INT,
   name TEXT,
   date TEXT,
@@ -114,7 +125,8 @@ CREATE TABLE certificates (
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE publications (
+CREATE TABLE publications 
+(
   resumeId INT,
   name TEXT,
   publisher TEXT,
@@ -124,46 +136,53 @@ CREATE TABLE publications (
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE skills (
+CREATE TABLE skills 
+(
   resumeId INT,
   name TEXT,
   level TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE skills_keywords (
+CREATE TABLE skills_keywords 
+(
   resumeId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE languages (
+CREATE TABLE languages 
+(
   resumeId INT,
   language TEXT,
   fluency TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE interests (
+CREATE TABLE interests 
+(
   resumeId INT,
   name TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE interests_keywords (
+CREATE TABLE interests_keywords 
+(
   resumeId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE `references` (
+CREATE TABLE `references` 
+(
   resumeId INT,
   name TEXT,
   reference TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE projects (
+CREATE TABLE projects 
+(
   resumeId INT,
   name TEXT,
   description TEXT,
@@ -175,19 +194,22 @@ CREATE TABLE projects (
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE projects_highlights (
+CREATE TABLE projects_highlights 
+(
   resumeId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE projects_keywords (
+CREATE TABLE projects_keywords 
+(
   resumeId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
-CREATE TABLE projects_roles (
+CREATE TABLE projects_roles 
+(
   resumeId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)

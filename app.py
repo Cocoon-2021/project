@@ -30,7 +30,6 @@ async def firstInsert(apival):
     basicsUrl = apival["basics"]["url"]
     basicsSummary = apival["basics"]["summary"]
     connect.execute(f"insert into resume values({id},'{coverLetter}','{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
-    id = id + 1
 
 
 
@@ -353,8 +352,7 @@ async def fetchData():
                             ec["value"]
                             for ec in ecResults
                             if ec["resumeId"] == i["id"]
-                        ]
-                        
+                        ]            
                     }
                     for e in eResults
                     if e["resumeId"] == i["id"]
@@ -489,7 +487,6 @@ async def homepost(request):
     global apival
     apival = await request.json()
     dataInVal = await dataIn(apival)
-
 
     return JSONResponse(dataInVal)
 

@@ -39,10 +39,12 @@
                 },
                 "email": {
                     "type": "string",
-                    "format": "email"
+                    "format": "email",
+                    "pattern": "^[A-za-z0-9]+@[a-zA-Z]+.[a-zA-Z]{2,3}$"
                 },
                 "phone": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength":10
                 },
                 "url": {
                     "type": "string"

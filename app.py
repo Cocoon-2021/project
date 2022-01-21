@@ -55,6 +55,7 @@ async def firstInsert(apival):
 async def workInsert(apival):
     scsRate = "work table done"
     work = apival["work"]
+    workId = 1
     for i in work:
         workName = i["name"]
         workLocation = i["location"]
@@ -66,13 +67,14 @@ async def workInsert(apival):
         workSummary = i["summary"]
         workHighlights = i["highlights"]
         workKeywords = i["keywords"]
-        connect.execute(f"insert into work values({resumeId},'{workName}','{workLocation}','{workDescription}','{workPosition}','{workUrl}','{workStartDate}','{workEndDate}','{workSummary}')")
+        connect.execute(f"insert into work values({resumeId},{workId},'{workName}','{workLocation}','{workDescription}','{workPosition}','{workUrl}','{workStartDate}','{workEndDate}','{workSummary}')")
         for m in workHighlights:
             highValues = m
-            connect.execute(f"insert into work_highlights values({resumeId},'{highValues}')")
+            connect.execute(f"insert into work_highlights values({resumeId},{workId},'{highValues}')")
         for n in workKeywords:
             workKeywordsVal = n
-            connect.execute(f"insert into work_keywords values({resumeId},'{workKeywordsVal}')")
+            connect.execute(f"insert into work_keywords values({resumeId},{workId},'{workKeywordsVal}')")
+        workId = workId + 1
     return scsRate
 
 
@@ -80,6 +82,7 @@ async def workInsert(apival):
 async def volInsert(apival):
     volunteer=apival["volunteer"]
     scsRate = "volunteer table sucess"
+    volunteerId = 1
     for i in volunteer:
         volunteerOrganization = i["organization"]
         volunteerPosition = i["position"]
@@ -88,10 +91,11 @@ async def volInsert(apival):
         volunteerEndDate = i["endDate"]
         volunteerSummary = i["summary"]
         volunteerHighlights = i["highlights"]
-        connect.execute(f"insert into volunteer values({resumeId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
+        connect.execute(f"insert into volunteer values({resumeId},{volunteerId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
         for m in volunteerHighlights:
             vHighValues = m
-            connect.execute(f"insert into volunteer_highlights values({resumeId},%s)",vHighValues)
+            connect.execute(f"insert into volunteer_highlights values({resumeId},{volunteerId},%s)",vHighValues)
+        volunteerId = volunteerId + 1
     return scsRate
 
 
@@ -99,6 +103,7 @@ async def volInsert(apival):
 async def eduInsert(apival):
     scsRate = "education section Done"
     education = apival["education"]
+    educationId = 1
     for i in education:
         educationInstitution = i["institution"]
         educationUrl = i["url"]
@@ -108,10 +113,11 @@ async def eduInsert(apival):
         educationEndDate = i["endDate"]
         educationScore = i["score"]
         educationCourses = i["courses"]
-        connect.execute(f"insert into education values({resumeId},'{educationInstitution}','{educationUrl}','{educationArea}','{educationStudyType}','{educationStartDate}','{educationEndDate}','{educationScore}')")
+        connect.execute(f"insert into education values({resumeId},{educationId},'{educationInstitution}','{educationUrl}','{educationArea}','{educationStudyType}','{educationStartDate}','{educationEndDate}','{educationScore}')")
         for m in educationCourses:
             eduCourse = m
-            connect.execute(f"insert into education_courses values({resumeId},'{eduCourse}')")
+            connect.execute(f"insert into education_courses values({resumeId},{educationId},'{eduCourse}')")
+        educationId = educationId + 1
     return scsRate
 
 
@@ -152,14 +158,16 @@ async def pubInsert(apival):
 async def skillInsert(apival):
     scsRate = "skill scruion done"
     skills = apival["skills"]
+    skillId = 1
     for i in skills:
         skillName = i["name"]
         skilLevel = i["level"]
         skillKeywords = i["keywords"]
-        connect.execute(f"insert into skills values({resumeId},'{skillName}','{skilLevel}')")
+        connect.execute(f"insert into skills values({resumeId},{skillId},'{skillName}','{skilLevel}')")
         for n in skillKeywords:
             keywordValues = n
-            connect.execute(f"insert into skills_keywords values({resumeId},'{keywordValues}')")
+            connect.execute(f"insert into skills_keywords values({resumeId},{skillId},'{keywordValues}')")
+        skillId = skillId + 1
     return scsRate
 
 
@@ -173,14 +181,16 @@ async def lanInsert(apival):
 
 
     interests = apival["interests"]
+    intId = 1
     for i in interests:
         interestsName = i["name"]
         interestsKeyWord = i["keywords"]
-        connect.execute(f"insert into interests values({resumeId},'{interestsName}')")
+        connect.execute(f"insert into interests values({resumeId},{intId},'{interestsName}')")
 
         for n in interestsKeyWord:
             intrKeywords = n
-            connect.execute(f"insert into interests_keywords values({resumeId},'{intrKeywords}')")
+            connect.execute(f"insert into interests_keywords values({resumeId},{intId},'{intrKeywords}')")
+        intId = intId + 1
 
 
 
@@ -196,6 +206,7 @@ async def lanInsert(apival):
 async def projectInsert(apival):
     scsRate = "projects section done"  
     projects = apival["projects"]
+    proId = 1
     for i in projects:
         projectName = i["name"]
         projectDescription = i["description"]
@@ -207,18 +218,19 @@ async def projectInsert(apival):
         projectHighlights = i["highlights"]
         projectKeywords = i["keywords"]
         projectRoles = i["roles"]
-        connect.execute(f"insert into projects values({resumeId},'{projectName}','{projectDescription}','{projectStartDate}','{projectEndDate}','{projectUrl}','{projectEntity}','{projectType}')")
+        connect.execute(f"insert into projects values({resumeId},{proId},'{projectName}','{projectDescription}','{projectStartDate}','{projectEndDate}','{projectUrl}','{projectEntity}','{projectType}')")
         for n in projectHighlights:
             projectHighValues = n
-            connect.execute(f"insert into projects_highlights values({resumeId},'{projectHighValues}')")
+            connect.execute(f"insert into projects_highlights values({resumeId},{proId},'{projectHighValues}')")
         
         for m in projectKeywords:
             projectKeyValues = m
-            connect.execute(f"insert into projects_keywords values({resumeId},'{projectKeyValues}')")
+            connect.execute(f"insert into projects_keywords values({resumeId},{proId},'{projectKeyValues}')")
 
         for r in  projectRoles:
             projectRolesValues = r
-            connect.execute(f"insert into projects_roles values({resumeId},'{projectRolesValues}')")
+            connect.execute(f"insert into projects_roles values({resumeId},{proId},'{projectRolesValues}')")
+        proId = proId + 1
     return scsRate
 
 
@@ -311,12 +323,12 @@ async def fetchData():
                         "highlights":[
                                 wh["value"]
                             for wh in whResults
-                            if wh["resumeId"] == i["id"]
+                            if wh["resumeId"] == i["id"] and wh["workId"] == w["id"]
                         ],
                         "keywords":[
                             wk["value"]
                             for wk in wkResults
-                            if wk["resumeId"] == i["id"]
+                            if wk["resumeId"] == i["id"] and wk["workId"] == w["id"]
                         ]
                     }
                     for w in wrResults
@@ -333,7 +345,7 @@ async def fetchData():
                         "highlights":[
                             vh["value"]
                             for vh in vhResults
-                            if vh["resumeId"] == i["id"]
+                            if vh["resumeId"] == i["id"] and vh["volId"] == v["id"]
                         ]
                     }
                     for v in vResults
@@ -351,7 +363,7 @@ async def fetchData():
                         "courses":[
                             ec["value"]
                             for ec in ecResults
-                            if ec["resumeId"] == i["id"]
+                            if ec["resumeId"] == i["id"] and ec["eduId"] == e["id"]
                         ]            
                     }
                     for e in eResults
@@ -395,7 +407,7 @@ async def fetchData():
                         "keywords":[
                             sk["value"]
                             for sk in skResults
-                            if sk["resumeId"] == i["id"]
+                            if sk["resumeId"] == i["id"] and sk["skillId"] == s["id"]
                         ]
                     }
                     for s in sResults
@@ -415,7 +427,7 @@ async def fetchData():
                         "keywords":[
                             ik["value"]
                             for ik in ikResults
-                            if ik["resumeId"] == i["id"]
+                            if ik["resumeId"] == i["id"] and ik["intrId"] == intra["id"]
                         ]
                     }
                     for intra in iResults
@@ -436,12 +448,12 @@ async def fetchData():
                         "highlights":[
                             prh["value"]
                             for prh in prohResults
-                            if prh["resumeId"] == i["id"]
+                            if prh["resumeId"] == i["id"] and prh["proId"] == pr["id"]
                         ],
                         "keywords":[
                             prk["value"]
                             for prk in prokResults
-                            if prk["resumeId"] == i["id"]
+                            if prk["resumeId"] == i["id"] and prk["proId"] == pr["id"]
                         ],
                         "startDate":pr["startDate"],
                         "endDate":pr["endDate"],
@@ -449,7 +461,7 @@ async def fetchData():
                         "roles":[
                             prro["value"]
                             for prro in prorResults
-                            if prro["resumeId"] == i["id"]
+                            if prro["resumeId"] == i["id"] and prro["proId"] == pr["id"]
                         ],
                         "entity":pr["entity"],
                         "type":pr["type"]

@@ -42,6 +42,7 @@ CREATE TABLE basics_profiles
 CREATE TABLE work 
 (
   resumeId INT,
+  id INT,
   name TEXT,
   location TEXT,
   description TEXT,
@@ -56,13 +57,14 @@ CREATE TABLE work
 CREATE TABLE work_highlights 
 (
   resumeId INT,
+  workId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
 
 CREATE TABLE work_keywords (
   resumeId INT,
-
+  workId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
@@ -70,6 +72,7 @@ CREATE TABLE work_keywords (
 CREATE TABLE volunteer 
 (
   resumeId INT,
+  id INT,
   organization TEXT,
   position TEXT,
   url TEXT,
@@ -82,6 +85,7 @@ CREATE TABLE volunteer
 CREATE TABLE volunteer_highlights 
 (
   resumeId INT,
+  volId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
@@ -89,6 +93,7 @@ CREATE TABLE volunteer_highlights
 CREATE TABLE education 
 (
   resumeId INT,
+  id INT,
   institution TEXT,
   url TEXT,
   area TEXT,
@@ -102,6 +107,7 @@ CREATE TABLE education
 CREATE TABLE education_courses 
 (
   resumeId INT,
+  eduId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
@@ -140,6 +146,7 @@ CREATE TABLE publications
 CREATE TABLE skills 
 (
   resumeId INT,
+  id INT,
   name TEXT,
   level TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
@@ -148,6 +155,7 @@ CREATE TABLE skills
 CREATE TABLE skills_keywords 
 (
   resumeId INT,
+  skillId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
@@ -163,6 +171,7 @@ CREATE TABLE languages
 CREATE TABLE interests 
 (
   resumeId INT,
+  id INT,
   name TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
@@ -170,6 +179,7 @@ CREATE TABLE interests
 CREATE TABLE interests_keywords 
 (
   resumeId INT,
+  intrId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
@@ -185,6 +195,7 @@ CREATE TABLE `references`
 CREATE TABLE projects 
 (
   resumeId INT,
+  id INT,
   name TEXT,
   description TEXT,
   startDate TEXT,
@@ -198,6 +209,7 @@ CREATE TABLE projects
 CREATE TABLE projects_highlights 
 (
   resumeId INT,
+  proId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
@@ -205,6 +217,7 @@ CREATE TABLE projects_highlights
 CREATE TABLE projects_keywords 
 (
   resumeId INT,
+  proId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );
@@ -212,6 +225,7 @@ CREATE TABLE projects_keywords
 CREATE TABLE projects_roles 
 (
   resumeId INT,
+  proId INT,
   value TEXT,
   FOREIGN KEY (resumeId) REFERENCES resume(id)
 );

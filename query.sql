@@ -5,7 +5,8 @@ CREATE DATABASE resumedata;
 USE resumedata;
 
 
-CREATE TABLE resume (
+CREATE TABLE resume 
+(
   id INT AUTO_INCREMENT,
   coverLetter TEXT,
   name TEXT,

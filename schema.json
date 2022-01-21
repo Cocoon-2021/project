@@ -68,7 +68,8 @@
                             "type": "string"
                         },
                         "postalCode": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 10
                         },
                         "city": {
                             "type": "string"

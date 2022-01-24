@@ -81,7 +81,7 @@ async def workInsert(apival):
 
 async def volInsert(apival):
     volunteer=apival["volunteer"]
-    scsRate = "volunteer table sucess"
+    scsRate = "volunteer section sucess"
     volunteerId = 1
     for i in volunteer:
         volunteerOrganization = i["organization"]
@@ -95,8 +95,7 @@ async def volInsert(apival):
 
         for n in volunteerHighlights:
             vHighValues = n
-            print(vHighValues)
-            session.execute(f"insert into volunteer_highlights(resumeId,volId,value) values({resumeId},{volunteerId},'{vHighValues}')")
+            session.execute(f"insert into volunteer_highlights values({resumeId},{volunteerId},'{vHighValues}')")
         volunteerId = volunteerId + 1
     return scsRate
 
@@ -281,11 +280,12 @@ async def dataIn(apival):
                 await projectInsert(apival)
             except:
                 session.rollback()
+                checkList = "Data Insertion Error"
             else:
                 session.commit()
             finally:
                 session.close()
-        checkList = apival
+        checkList = "Data Insertion Sucessfull"
     else:
         print(checkList)
         checkList = str(checkList)

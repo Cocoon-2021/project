@@ -285,7 +285,7 @@ async def dataIn(apival):
                 session.commit()
             finally:
                 session.close()
-        checkList = "Data Insertion Sucessfull"
+        checkList = apival
     else:
         print(checkList)
         checkList = str(checkList)

@@ -1,7 +1,6 @@
 from sqlalchemy import schema
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
-from starlette.requests import Request
 from starlette.routing import Route
 from jsonschema import Draft7Validator
 import sqlalchemy
@@ -13,6 +12,9 @@ print(connect)
 
 with open('schema.json') as sc:
     schema = json.load(sc)
+
+
+# ------------------- INSERTION --------------------------- #
 
 
 async def firstInsert(apival):
@@ -32,7 +34,6 @@ async def firstInsert(apival):
     connect.execute(f"insert into resume values({id},'{coverLetter}','{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
 
 
-
     locationAddress = apival["basics"]["location"]["address"]
     locationPostalCode = apival["basics"]["location"]["postalCode"]
     locationCity = apival["basics"]["location"]["city"]
@@ -49,7 +50,6 @@ async def firstInsert(apival):
         connect.execute(f"insert into basics_profiles values({resumeId},'{bp_network}','{bp_username}','{bp_url}')")
 
     return scsRate
-
 
 
 async def workInsert(apival):
@@ -78,7 +78,6 @@ async def workInsert(apival):
     return scsRate
 
 
-
 async def volInsert(apival):
     volunteer=apival["volunteer"]
     scsRate = "volunteer table sucess"
@@ -97,7 +96,6 @@ async def volInsert(apival):
             connect.execute(f"insert into volunteer_highlights values({resumeId},{volunteerId},%s)",vHighValues)
         volunteerId = volunteerId + 1
     return scsRate
-
 
 
 async def eduInsert(apival):
@@ -141,6 +139,7 @@ async def awardsInsert(apival):
 
     return scsRate
 
+
 async def pubInsert(apival):
     scsRate = "publication section Done"
     publications = apival["publications"]
@@ -152,7 +151,6 @@ async def pubInsert(apival):
         pubSummary = i["summary"]
         connect.execute(f"insert into publications values({resumeId},'{pubName}','{pubPublisher}','{pubReleaseDate}','{pubUrl}','{pubSummary}')")
     return scsRate
-
 
 
 async def skillInsert(apival):
@@ -178,8 +176,10 @@ async def lanInsert(apival):
         langLanguage = i["language"]
         langFluency = i["fluency"]
         connect.execute(f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
+    return scsRate
 
-
+async def interInsert(apival):
+    scsRate = "interestes section done"
     interests = apival["interests"]
     intId = 1
     for i in interests:
@@ -191,15 +191,15 @@ async def lanInsert(apival):
             intrKeywords = n
             connect.execute(f"insert into interests_keywords values({resumeId},{intId},'{intrKeywords}')")
         intId = intId + 1
+    return scsRate
 
-
-
+async def refeInsert():
+    scsRate = "refereneces section done"
     references = apival["references"]
     for i in references:
         refName = i["name"]
         refReference = i["reference"]
         connect.execute(f"insert into `references` values({resumeId},'{refName}','{refReference}')")
-    
     return scsRate
 
 
@@ -233,6 +233,9 @@ async def projectInsert(apival):
         proId = proId + 1
     return scsRate
 
+# ------------------------------------------------------------------ #
+
+# ---------------------  VALIDATION  ------------------------------- #
 
 async def dataIn(apival):
     validator = Draft7Validator(schema)
@@ -241,12 +244,29 @@ async def dataIn(apival):
         print("no validation issue")
         await firstInsert(apival)
         await workInsert(apival)
-        await volInsert(apival)
+        try:
+            await volInsert(apival)
+        except:
+            print("no Volunteer Data")
         await eduInsert(apival)
-        await awardsInsert(apival)
+        try:
+            await awardsInsert(apival)
+        except:
+            print("no awards data")
         await skillInsert(apival)
-        await pubInsert(apival)
-        await lanInsert(apival)
+        try:
+            await pubInsert(apival)
+        except:
+            print("no publication data")
+        try:
+            await lanInsert(apival)
+        except:
+            print("no language data")
+        await interInsert(apival)
+        try:
+            await refeInsert(apival)
+        except:
+            print("no refereneces data")
         await projectInsert(apival)
         checkList = apival
     else:
@@ -254,6 +274,10 @@ async def dataIn(apival):
         checkList = str(checkList)
 
     return checkList
+
+# ---------------------------------------------------------------------- #
+
+# ---------------------------- GET DATA -------------------------------- #  
 
 
 async def fetchData():
@@ -468,12 +492,15 @@ async def fetchData():
 
                     }
                     for pr in proResults
-                    if pr["resumeId"] == i["id"]
-                ]        
-            }
+                    if pr["resumeId"] == i["id"] 
+                ]          
+            } 
             for i in outResult
     ]
     return content
+
+
+# -------------- PARAMETER ------------------------ #
 
 
 async def parmPass(request):
@@ -481,12 +508,21 @@ async def parmPass(request):
     fetchContent = await fetchData()
     for i in fetchContent:
         if i["id"] == userPassId:
-            content2 = i
+            content2 = dict(
+                [
+                    (key, value) 
+                    for key, value in i.items() 
+                    if value != [] 
+                ]
+            )
+
             break
         else:
             content2 = "empty"
     
     return JSONResponse( content2)
+
+#---------------------------------------------------- #
 
 
 async def homepage(request):

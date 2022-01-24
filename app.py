@@ -1,14 +1,15 @@
-from sqlalchemy import schema
+from sqlalchemy import schema,create_engine
+from sqlalchemy.orm import Session
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 from jsonschema import Draft7Validator
-import sqlalchemy
 import json
 
-connect = sqlalchemy.create_engine(
+connect = create_engine(
     'mysql+mysqlconnector://root:password@localhost/resumedata', connect_args={'auth_plugin': 'mysql_native_password'})
 print(connect)
+
 
 with open('schema.json') as sc:
     schema = json.load(sc)
@@ -23,7 +24,7 @@ async def firstInsert(apival):
     coverLetter = apival["coverLetter"]
     global resumeId 
     resumeId = id
-    
+            
     basicsName = apival["basics"]["name"]
     basicsLabel = apival["basics"]["label"]
     basicsImage = apival["basics"]["image"]
@@ -31,7 +32,7 @@ async def firstInsert(apival):
     basicsPhone = apival["basics"]["phone"]
     basicsUrl = apival["basics"]["url"]
     basicsSummary = apival["basics"]["summary"]
-    connect.execute(f"insert into resume values({id},'{coverLetter}','{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
+    session.execute(f"insert into resume values({id},'{coverLetter}','{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
 
 
     locationAddress = apival["basics"]["location"]["address"]
@@ -39,7 +40,7 @@ async def firstInsert(apival):
     locationCity = apival["basics"]["location"]["city"]
     locationCountyCode = apival["basics"]["location"]["countryCode"]
     locationRegion = apival["basics"]["location"]["region"]
-    connect.execute(f"insert into basics_location values({resumeId},'{locationAddress}','{locationPostalCode}','{locationCity}','{locationCountyCode}','{locationRegion}')")
+    session.execute(f"insert into basics_location values({resumeId},'{locationAddress}','{locationPostalCode}','{locationCity}','{locationCountyCode}','{locationRegion}')")
 
 
     profiles = apival["basics"]["profiles"]
@@ -47,7 +48,7 @@ async def firstInsert(apival):
         bp_network = i["network"]
         bp_username = i["username"]
         bp_url = i["url"]
-        connect.execute(f"insert into basics_profiles values({resumeId},'{bp_network}','{bp_username}','{bp_url}')")
+        session.execute(f"insert into basics_profiles values({resumeId},'{bp_network}','{bp_username}','{bp_url}')")
 
     return scsRate
 
@@ -67,13 +68,13 @@ async def workInsert(apival):
         workSummary = i["summary"]
         workHighlights = i["highlights"]
         workKeywords = i["keywords"]
-        connect.execute(f"insert into work values({resumeId},{workId},'{workName}','{workLocation}','{workDescription}','{workPosition}','{workUrl}','{workStartDate}','{workEndDate}','{workSummary}')")
+        session.execute(f"insert into work values({resumeId},{workId},'{workName}','{workLocation}','{workDescription}','{workPosition}','{workUrl}','{workStartDate}','{workEndDate}','{workSummary}')")
         for m in workHighlights:
             highValues = m
-            connect.execute(f"insert into work_highlights values({resumeId},{workId},'{highValues}')")
+            session.execute(f"insert into work_highlights values({resumeId},{workId},'{highValues}')")
         for n in workKeywords:
             workKeywordsVal = n
-            connect.execute(f"insert into work_keywords values({resumeId},{workId},'{workKeywordsVal}')")
+            session.execute(f"insert into work_keywords values({resumeId},{workId},'{workKeywordsVal}')")
         workId = workId + 1
     return scsRate
 
@@ -90,10 +91,12 @@ async def volInsert(apival):
         volunteerEndDate = i["endDate"]
         volunteerSummary = i["summary"]
         volunteerHighlights = i["highlights"]
-        connect.execute(f"insert into volunteer values({resumeId},{volunteerId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
-        for m in volunteerHighlights:
-            vHighValues = m
-            connect.execute(f"insert into volunteer_highlights values({resumeId},{volunteerId},%s)",vHighValues)
+        session.execute(f"insert into volunteer values({resumeId},{volunteerId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
+
+        for n in volunteerHighlights:
+            vHighValues = n
+            print(vHighValues)
+            session.execute(f"insert into volunteer_highlights(resumeId,volId,value) values({resumeId},{volunteerId},'{vHighValues}')")
         volunteerId = volunteerId + 1
     return scsRate
 
@@ -111,31 +114,33 @@ async def eduInsert(apival):
         educationEndDate = i["endDate"]
         educationScore = i["score"]
         educationCourses = i["courses"]
-        connect.execute(f"insert into education values({resumeId},{educationId},'{educationInstitution}','{educationUrl}','{educationArea}','{educationStudyType}','{educationStartDate}','{educationEndDate}','{educationScore}')")
+        session.execute(f"insert into education values({resumeId},{educationId},'{educationInstitution}','{educationUrl}','{educationArea}','{educationStudyType}','{educationStartDate}','{educationEndDate}','{educationScore}')")
         for m in educationCourses:
             eduCourse = m
-            connect.execute(f"insert into education_courses values({resumeId},{educationId},'{eduCourse}')")
+            session.execute(f"insert into education_courses values({resumeId},{educationId},'{eduCourse}')")
         educationId = educationId + 1
     return scsRate
 
 
 async def awardsInsert(apival):
-    scsRate = "awards and certificate section done"
+    scsRate = "awards section done"
     awards=apival["awards"]
-    certificates = apival["certificates"]
     for i in awards:
         awardsTitle=i["title"]
         awardsDate=i["date"]
         awardsAwarder=i["awarder"]
         awardsSummary=i["summary"]
-        connect.execute(f"insert into awards values({resumeId},'{awardsTitle}','{awardsDate}','{awardsAwarder}','{awardsSummary}')")
+        session.execute(f"insert into awards values({resumeId},'{awardsTitle}','{awardsDate}','{awardsAwarder}','{awardsSummary}')")
 
+async def certInsert(apival):
+    certificates = apival["certificates"]
+    scsRate = "certificate section done"
     for i in certificates:
         certName = i["name"]
         certDate = i["date"]
         certUrl = i["url"]
         certIssuer = i["issuer"]
-        connect.execute(f"insert into certificates values({resumeId},'{certName}','{certDate}','{certUrl}','{certIssuer}')")
+        session.execute(f"insert into certificates values({resumeId},'{certName}','{certDate}','{certUrl}','{certIssuer}')")
 
     return scsRate
 
@@ -149,7 +154,7 @@ async def pubInsert(apival):
         pubReleaseDate = i["releaseDate"]
         pubUrl = i["url"]
         pubSummary = i["summary"]
-        connect.execute(f"insert into publications values({resumeId},'{pubName}','{pubPublisher}','{pubReleaseDate}','{pubUrl}','{pubSummary}')")
+        session.execute(f"insert into publications values({resumeId},'{pubName}','{pubPublisher}','{pubReleaseDate}','{pubUrl}','{pubSummary}')")
     return scsRate
 
 
@@ -161,10 +166,10 @@ async def skillInsert(apival):
         skillName = i["name"]
         skilLevel = i["level"]
         skillKeywords = i["keywords"]
-        connect.execute(f"insert into skills values({resumeId},{skillId},'{skillName}','{skilLevel}')")
+        session.execute(f"insert into skills values({resumeId},{skillId},'{skillName}','{skilLevel}')")
         for n in skillKeywords:
             keywordValues = n
-            connect.execute(f"insert into skills_keywords values({resumeId},{skillId},'{keywordValues}')")
+            session.execute(f"insert into skills_keywords values({resumeId},{skillId},'{keywordValues}')")
         skillId = skillId + 1
     return scsRate
 
@@ -175,7 +180,7 @@ async def lanInsert(apival):
     for i in languages:
         langLanguage = i["language"]
         langFluency = i["fluency"]
-        connect.execute(f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
+        session.execute(f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
     return scsRate
 
 async def interInsert(apival):
@@ -185,21 +190,22 @@ async def interInsert(apival):
     for i in interests:
         interestsName = i["name"]
         interestsKeyWord = i["keywords"]
-        connect.execute(f"insert into interests values({resumeId},{intId},'{interestsName}')")
+        session.execute(f"insert into interests values({resumeId},{intId},'{interestsName}')")
 
         for n in interestsKeyWord:
             intrKeywords = n
-            connect.execute(f"insert into interests_keywords values({resumeId},{intId},'{intrKeywords}')")
+            session.execute(f"insert into interests_keywords values({resumeId},{intId},'{intrKeywords}')")
         intId = intId + 1
     return scsRate
 
-async def refeInsert():
+
+async def referencesInsert(apival):
     scsRate = "refereneces section done"
     references = apival["references"]
     for i in references:
         refName = i["name"]
         refReference = i["reference"]
-        connect.execute(f"insert into `references` values({resumeId},'{refName}','{refReference}')")
+        session.execute(f"insert into `references` values({resumeId},'{refName}','{refReference}')")
     return scsRate
 
 
@@ -218,18 +224,18 @@ async def projectInsert(apival):
         projectHighlights = i["highlights"]
         projectKeywords = i["keywords"]
         projectRoles = i["roles"]
-        connect.execute(f"insert into projects values({resumeId},{proId},'{projectName}','{projectDescription}','{projectStartDate}','{projectEndDate}','{projectUrl}','{projectEntity}','{projectType}')")
+        session.execute(f"insert into projects values({resumeId},{proId},'{projectName}','{projectDescription}','{projectStartDate}','{projectEndDate}','{projectUrl}','{projectEntity}','{projectType}')")
         for n in projectHighlights:
             projectHighValues = n
-            connect.execute(f"insert into projects_highlights values({resumeId},{proId},'{projectHighValues}')")
+            session.execute(f"insert into projects_highlights values({resumeId},{proId},'{projectHighValues}')")
         
         for m in projectKeywords:
             projectKeyValues = m
-            connect.execute(f"insert into projects_keywords values({resumeId},{proId},'{projectKeyValues}')")
+            session.execute(f"insert into projects_keywords values({resumeId},{proId},'{projectKeyValues}')")
 
         for r in  projectRoles:
             projectRolesValues = r
-            connect.execute(f"insert into projects_roles values({resumeId},{proId},'{projectRolesValues}')")
+            session.execute(f"insert into projects_roles values({resumeId},{proId},'{projectRolesValues}')")
         proId = proId + 1
     return scsRate
 
@@ -242,32 +248,43 @@ async def dataIn(apival):
     checkList = list(validator.iter_errors(apival))
     if len(checkList) == 0:
         print("no validation issue")
-        await firstInsert(apival)
-        await workInsert(apival)
-        try:
-            await volInsert(apival)
-        except:
-            print("no Volunteer Data")
-        await eduInsert(apival)
-        try:
-            await awardsInsert(apival)
-        except:
-            print("no awards data")
-        await skillInsert(apival)
-        try:
-            await pubInsert(apival)
-        except:
-            print("no publication data")
-        try:
-            await lanInsert(apival)
-        except:
-            print("no language data")
-        await interInsert(apival)
-        try:
-            await refeInsert(apival)
-        except:
-            print("no refereneces data")
-        await projectInsert(apival)
+        global session
+        with Session(connect) as session:
+            session.begin()
+            try:
+                await firstInsert(apival)
+                await workInsert(apival)
+                try:
+                    await volInsert(apival)
+                except:
+                    print("no Volunteer Data")
+                await eduInsert(apival)
+                try:
+                    await awardsInsert(apival)
+                except:
+                    print("no awards data")
+                await certInsert(apival)
+                await skillInsert(apival)
+                try:
+                    await pubInsert(apival)
+                except:
+                    print("no publication data")
+                try:
+                    await lanInsert(apival)
+                except:
+                    print("no language data")
+                await interInsert(apival)
+                try:
+                    await referencesInsert(apival)
+                except:
+                    print("no refereneces data")
+                await projectInsert(apival)
+            except:
+                session.rollback()
+            else:
+                session.commit()
+            finally:
+                session.close()
         checkList = apival
     else:
         print(checkList)

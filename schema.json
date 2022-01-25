@@ -46,7 +46,9 @@
                 },
                 "phone": {
                     "type": "string",
-                    "minLength":10
+                    "pattern": "[0-9]",
+                    "minLength":10,
+                    "maxLength": 15
                 },
                 "url": {
                     "type": "string"
@@ -76,7 +78,8 @@
                             "type": "string"
                         },
                         "countryCode": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 3
                         },
                         "region": {
                             "type": "string"
@@ -155,7 +158,8 @@
                                 "type": "string"
                             },
                             "summary": {
-                                "type": "string"
+                                "type": "string",
+                                "maxLength": 750
                             },
                             "highlights": {
                                 "type": "array",

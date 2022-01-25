@@ -51,7 +51,6 @@ async def dataInsertion(apival):
                 session.execute(f"insert into basics_profiles values({resumeId},'{bp_network}','{bp_username}','{bp_url}')")
 
 
-            scsRate = "work table done"
             work = apival["work"]
             workId = 1
             for i in work:
@@ -76,7 +75,6 @@ async def dataInsertion(apival):
 
 
             volunteer=apival["volunteer"]
-            scsRate = "volunteer section sucess"
             volunteerId = 1
             for i in volunteer:
                 volunteerOrganization = i["organization"]
@@ -91,18 +89,9 @@ async def dataInsertion(apival):
                 for s in volunteerHighlights:
                     vHighValues = s
                     session.execute(f"insert into volunteer_highlights values({resumeId},{volunteerId},'{vHighValues}')")
-
-            # for n in volunteerHighlights:
-            #     vHighValues = n
-            #     params = (resumeId, volunteerId, vHighValues)
-
-            #     sql = """INSERT INTO volunteer_highlights (resumeId, volId, value)
-            #     VALUES (%s, %s, %s)"""
-            #     session.execute(sql, params)
                 volunteerId = volunteerId + 1
 
 
-            scsRate = "education section Done"
             education = apival["education"]
             educationId = 1
             for i in education:
@@ -121,7 +110,6 @@ async def dataInsertion(apival):
                 educationId = educationId + 1
     
 
-            scsRate = "awards section done"
             awards=apival["awards"]
             for i in awards:
                 awardsTitle=i["title"]
@@ -132,7 +120,6 @@ async def dataInsertion(apival):
 
 
             certificates = apival["certificates"]
-            scsRate = "certificate section done"
             for i in certificates:
                 certName = i["name"]
                 certDate = i["date"]
@@ -141,7 +128,6 @@ async def dataInsertion(apival):
                 session.execute(f"insert into certificates values({resumeId},'{certName}','{certDate}','{certUrl}','{certIssuer}')")
 
     
-            scsRate = "publication section Done"
             publications = apival["publications"]
             for i in publications:
                 pubName = i["name"]
@@ -152,7 +138,6 @@ async def dataInsertion(apival):
                 session.execute(f"insert into publications values({resumeId},'{pubName}','{pubPublisher}','{pubReleaseDate}','{pubUrl}','{pubSummary}')")
 
 
-            scsRate = "skill scruion done"
             skills = apival["skills"]
             skillId = 1
             for i in skills:
@@ -166,9 +151,6 @@ async def dataInsertion(apival):
                 skillId = skillId + 1
 
 
-
-
-            scsRate = "language,interestes,refereneces section done"
             languages = apival["languages"]
             for i in languages:
                 langLanguage = i["language"]
@@ -176,7 +158,6 @@ async def dataInsertion(apival):
                 session.execute(f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
 
 
-            scsRate = "interestes section done"
             interests = apival["interests"]
             intId = 1
             for i in interests:
@@ -190,7 +171,6 @@ async def dataInsertion(apival):
                 intId = intId + 1
 
 
-            scsRate = "refereneces section done"
             references = apival["references"]
             for i in references:
                 refName = i["name"]

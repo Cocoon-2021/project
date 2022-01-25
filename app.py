@@ -34,14 +34,12 @@ async def firstInsert(apival):
     basicsSummary = apival["basics"]["summary"]
     session.execute(f"insert into resume values({id},'{coverLetter}','{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
 
-
     locationAddress = apival["basics"]["location"]["address"]
     locationPostalCode = apival["basics"]["location"]["postalCode"]
     locationCity = apival["basics"]["location"]["city"]
     locationCountyCode = apival["basics"]["location"]["countryCode"]
     locationRegion = apival["basics"]["location"]["region"]
     session.execute(f"insert into basics_location values({resumeId},'{locationAddress}','{locationPostalCode}','{locationCity}','{locationCountyCode}','{locationRegion}')")
-
 
     profiles = apival["basics"]["profiles"]
     for i in profiles:
@@ -139,6 +137,7 @@ async def awardsInsert(apival):
         awardsSummary=i["summary"]
         session.execute(f"insert into awards values({resumeId},'{awardsTitle}','{awardsDate}','{awardsAwarder}','{awardsSummary}')")
 
+
 async def certInsert(apival):
     certificates = apival["certificates"]
     scsRate = "certificate section done"
@@ -189,6 +188,7 @@ async def lanInsert(apival):
         langFluency = i["fluency"]
         session.execute(f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
     return scsRate
+
 
 async def interInsert(apival):
     scsRate = "interestes section done"

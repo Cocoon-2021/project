@@ -19,31 +19,31 @@ with open('schema.json') as sc:
 
 
 
-async def dataInsertion(apival):
+async def dataInsertion(resume):
     with Session(connect) as session:
         try:
-            coverLetter = apival["coverLetter"]       
-            basicsName = apival["basics"]["name"]
-            basicsLabel = apival["basics"]["label"]
-            basicsImage = apival["basics"]["image"]
-            basicsEmail = apival["basics"]["email"]
-            basicsPhone = apival["basics"]["phone"]
-            basicsUrl = apival["basics"]["url"]
-            basicsSummary = apival["basics"]["summary"]
+            coverLetter = resume["coverLetter"]       
+            basicsName = resume["basics"]["name"]
+            basicsLabel = resume["basics"]["label"]
+            basicsImage = resume["basics"]["image"]
+            basicsEmail = resume["basics"]["email"]
+            basicsPhone = resume["basics"]["phone"]
+            basicsUrl = resume["basics"]["url"]
+            basicsSummary = resume["basics"]["summary"]
             session.execute(f"insert into resume(coverLetter,name,label,image,email,phone,url,summary) values('{coverLetter}','{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
             idTaking = session.execute(f"select max(id) from resume").fetchall()
             for i in idTaking:
                 resumeId = i[0]
         
 
-            locationAddress = apival["basics"]["location"]["address"]
-            locationPostalCode = apival["basics"]["location"]["postalCode"]
-            locationCity = apival["basics"]["location"]["city"]
-            locationCountyCode = apival["basics"]["location"]["countryCode"]
-            locationRegion = apival["basics"]["location"]["region"]
+            locationAddress = resume["basics"]["location"]["address"]
+            locationPostalCode = resume["basics"]["location"]["postalCode"]
+            locationCity = resume["basics"]["location"]["city"]
+            locationCountyCode = resume["basics"]["location"]["countryCode"]
+            locationRegion = resume["basics"]["location"]["region"]
             session.execute(f"insert into basics_location values({resumeId},'{locationAddress}','{locationPostalCode}','{locationCity}','{locationCountyCode}','{locationRegion}')")
 
-            profiles = apival["basics"]["profiles"]
+            profiles = resume["basics"]["profiles"]
             for i in profiles:
                 bp_network = i["network"]
                 bp_username = i["username"]
@@ -51,7 +51,7 @@ async def dataInsertion(apival):
                 session.execute(f"insert into basics_profiles values({resumeId},'{bp_network}','{bp_username}','{bp_url}')")
 
 
-            work = apival["work"]
+            work = resume["work"]
             workId = 1
             for i in work:
                 workName = i["name"]
@@ -74,7 +74,7 @@ async def dataInsertion(apival):
                 workId = workId + 1
 
 
-            volunteer=apival["volunteer"]
+            volunteer=resume["volunteer"]
             volunteerId = 1
             for i in volunteer:
                 volunteerOrganization = i["organization"]
@@ -92,7 +92,7 @@ async def dataInsertion(apival):
                 volunteerId = volunteerId + 1
 
 
-            education = apival["education"]
+            education = resume["education"]
             educationId = 1
             for i in education:
                 educationInstitution = i["institution"]
@@ -110,7 +110,7 @@ async def dataInsertion(apival):
                 educationId = educationId + 1
     
 
-            awards=apival["awards"]
+            awards=resume["awards"]
             for i in awards:
                 awardsTitle=i["title"]
                 awardsDate=i["date"]
@@ -119,7 +119,7 @@ async def dataInsertion(apival):
                 session.execute(f"insert into awards values({resumeId},'{awardsTitle}','{awardsDate}','{awardsAwarder}','{awardsSummary}')")
 
 
-            certificates = apival["certificates"]
+            certificates = resume["certificates"]
             for i in certificates:
                 certName = i["name"]
                 certDate = i["date"]
@@ -128,7 +128,7 @@ async def dataInsertion(apival):
                 session.execute(f"insert into certificates values({resumeId},'{certName}','{certDate}','{certUrl}','{certIssuer}')")
 
     
-            publications = apival["publications"]
+            publications = resume["publications"]
             for i in publications:
                 pubName = i["name"]
                 pubPublisher = i["publisher"]
@@ -138,7 +138,7 @@ async def dataInsertion(apival):
                 session.execute(f"insert into publications values({resumeId},'{pubName}','{pubPublisher}','{pubReleaseDate}','{pubUrl}','{pubSummary}')")
 
 
-            skills = apival["skills"]
+            skills = resume["skills"]
             skillId = 1
             for i in skills:
                 skillName = i["name"]
@@ -151,14 +151,14 @@ async def dataInsertion(apival):
                 skillId = skillId + 1
 
 
-            languages = apival["languages"]
+            languages = resume["languages"]
             for i in languages:
                 langLanguage = i["language"]
                 langFluency = i["fluency"]
                 session.execute(f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
 
 
-            interests = apival["interests"]
+            interests = resume["interests"]
             intId = 1
             for i in interests:
                 interestsName = i["name"]
@@ -171,14 +171,14 @@ async def dataInsertion(apival):
                 intId = intId + 1
 
 
-            references = apival["references"]
+            references = resume["references"]
             for i in references:
                 refName = i["name"]
                 refReference = i["reference"]
                 session.execute(f"insert into `references` values({resumeId},'{refName}','{refReference}')")
 
 
-            projects = apival["projects"]
+            projects = resume["projects"]
             proId = 1
             for i in projects:
                 projectName = i["name"]
@@ -472,12 +472,12 @@ async def resumeGetAll(request):
 
 async def resumeInsert(request):
     # -----  VALIDATION  ----- #
-    apival = await request.json()
+    resume = await request.json()
     validator = Draft7Validator(schema)
-    checkList = list(validator.iter_errors(apival))
+    checkList = list(validator.iter_errors(resume))
     if len(checkList) == 0:
         print("no validation issue")
-        resumeId = await dataInsertion(apival)
+        resumeId = await dataInsertion(resume)
 
     return JSONResponse(resumeId)
 

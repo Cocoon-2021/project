@@ -93,9 +93,17 @@ async def volInsert(apival):
         volunteerHighlights = i["highlights"]
         session.execute(f"insert into volunteer values({resumeId},{volunteerId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
 
-        for n in volunteerHighlights:
-            vHighValues = n
+        for s in volunteerHighlights:
+            vHighValues = s
             session.execute(f"insert into volunteer_highlights values({resumeId},{volunteerId},'{vHighValues}')")
+
+        # for n in volunteerHighlights:
+        #     vHighValues = n
+        #     params = (resumeId, volunteerId, vHighValues)
+
+        #     sql = """INSERT INTO volunteer_highlights (resumeId, volId, value)
+        #     VALUES (%s, %s, %s)"""
+        #     session.execute(sql, params)
         volunteerId = volunteerId + 1
     return scsRate
 
@@ -256,36 +264,37 @@ async def dataIn(apival):
                 try:
                     await volInsert(apival)
                 except:
-                    print("no Volunteer Data")
+                    print("Volunteer data's missing")
                 await eduInsert(apival)
                 try:
                     await awardsInsert(apival)
                 except:
-                    print("no awards data")
+                    print("Awards data missing")
                 await certInsert(apival)
                 await skillInsert(apival)
                 try:
                     await pubInsert(apival)
                 except:
-                    print("no publication data")
+                    print("Publication data missing")
                 try:
                     await lanInsert(apival)
                 except:
-                    print("no language data")
+                    print("Language data missing")
                 await interInsert(apival)
                 try:
                     await referencesInsert(apival)
                 except:
-                    print("no refereneces data")
+                    print("Refereneces data missing")
                 await projectInsert(apival)
             except:
                 session.rollback()
-                checkList = "Data Insertion Error"
+                checkList = "Data Insertion Error | Duplicate ID | Missing values"
             else:
                 session.commit()
+                checkList = "Insertion Sucessfull"
             finally:
                 session.close()
-        checkList = apival
+        
     else:
         print(checkList)
         checkList = str(checkList)

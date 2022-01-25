@@ -1,4 +1,4 @@
-DROP DATABASE resumedata;
+DROP DATABASE IF EXISTS resumedata;
 
 CREATE DATABASE resumedata;
 

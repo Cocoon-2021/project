@@ -415,15 +415,15 @@ async def fetchResume():
             ],
             "interests":[
                 {
-                    "name": intra["name"],
+                    "name": intre["name"],
                     "keywords":[
                         ik["value"]
                         for ik in ikResults
-                        if ik["resumeId"] == i["id"] and ik["intrId"] == intra["id"]
+                        if ik["resumeId"] == i["id"] and ik["intrId"] == intre["id"]
                     ]
                 }
-                for intra in iResults
-                if intra["resumeId"] == i["id"]
+                for intre in iResults
+                if intre["resumeId"] == i["id"]
             ],
             "references":[
                 {

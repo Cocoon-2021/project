@@ -22,6 +22,7 @@ with open('validationSchema.json') as sc:
 async def dataInsertion(resume):
     with Session(connect) as session:
         try:
+            # --------- SECTION : BASICS --------- #
             coverLetter = resume["coverLetter"]
             basicsName = resume["basics"]["name"]
             basicsLabel = resume["basics"]["label"]
@@ -53,6 +54,7 @@ async def dataInsertion(resume):
                 session.execute(
                     f"insert into basics_profiles values({resumeId},'{bp_network}','{bp_username}','{bp_url}')")
 
+            # --------- SECTION : WORK --------- #
             work = resume["work"]
             workId = 1
             for i in work:
@@ -79,6 +81,7 @@ async def dataInsertion(resume):
                 workId = workId + 1
 
             try:
+                # ---------- SECTION : VOLUNTEER --------- #
                 volunteer = resume["volunteer"]
                 volunteerId = 1
                 for i in volunteer:
@@ -100,6 +103,8 @@ async def dataInsertion(resume):
             except:
                 print("No volunteer datas. ")
 
+
+            # ---------- SECTION : EDUCATION ---------- #
             education = resume["education"]
             educationId = 1
             for i in education:
@@ -118,7 +123,8 @@ async def dataInsertion(resume):
                     session.execute(
                         f"insert into education_courses values({resumeId},{educationId},'{eduCourse}')")
                 educationId = educationId + 1
-
+            
+            # --------- SECTION : AWARDS ---------- #
             try:
                 awards = resume["awards"]
                 for i in awards:
@@ -131,6 +137,7 @@ async def dataInsertion(resume):
             except:
                 print("No awards datas. ")
 
+            # --------- SECTION : CERTIFICATES --------- #
             try:
                 certificates = resume["certificates"]
                 for i in certificates:
@@ -143,6 +150,7 @@ async def dataInsertion(resume):
             except:
                 print("No certificates datas.")
 
+            # --------- SECTION : PUBLICATIONS --------- #
             try:
                 publications = resume["publications"]
                 for i in publications:
@@ -156,6 +164,7 @@ async def dataInsertion(resume):
             except:
                 print("Publications Data Missing")
 
+            # --------- SECTION : SKILLS --------- #
             skills = resume["skills"]
             skillId = 1
             for i in skills:
@@ -170,6 +179,7 @@ async def dataInsertion(resume):
                         f"insert into skills_keywords values({resumeId},{skillId},'{keywordValues}')")
                 skillId = skillId + 1
 
+            # --------- SECTION : LANGUAGES --------- #
             languages = resume["languages"]
             for i in languages:
                 langLanguage = i["language"]
@@ -177,6 +187,7 @@ async def dataInsertion(resume):
                 session.execute(
                     f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
 
+            # --------- SECTION : INTERESTS --------- #
             interests = resume["interests"]
             intId = 1
             for i in interests:
@@ -190,7 +201,8 @@ async def dataInsertion(resume):
                     session.execute(
                         f"insert into interests_keywords values({resumeId},{intId},'{intrKeywords}')")
                 intId = intId + 1
-
+            
+            # --------- SECTION : REFERENCES --------- #
             try:
                 references = resume["references"]
                 for i in references:
@@ -201,6 +213,7 @@ async def dataInsertion(resume):
             except:
                 print("No Referenecs included")
 
+            # --------- SECTION : PROJECTS --------- #
             projects = resume["projects"]
             proId = 1
             for i in projects:

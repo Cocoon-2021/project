@@ -12,11 +12,11 @@ connect = create_engine(
 print(connect)
 
 
-with open('schema.json') as sc:
+with open('validationSchema.json') as sc:
     schema = json.load(sc)
 
 
-# ------------------- INSERTION --------------------------- #
+# ------------------- RESUME INSERTION --------------------------- #
 
 
 async def dataInsertion(resume):
@@ -243,7 +243,7 @@ async def dataInsertion(resume):
     return resumeId
 
 
-# ---------------------------- GET DATA -------------------------------- #
+# ---------------------------- GET RESUME -------------------------------- #
 
 
 async def fetchResume():
@@ -469,8 +469,10 @@ async def fetchResume():
 
     return resume
 
+# -------------------------------------------------------------------- #
 
-# -------------- PARAMETER ------------------------ #
+
+# -------------- GET PARAMETERED RESUME ------------------------ #
 
 
 async def resumeGetOne(request):
@@ -491,7 +493,7 @@ async def resumeGetOne(request):
 
     return JSONResponse(parmResume)
 
-#---------------------------------------------------- #
+# --------------------------------------------------------------- #
 
 
 async def resumeGetAll(request):

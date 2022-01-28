@@ -21,7 +21,7 @@ print(engine)
 
 # ------------------- RESUME INSERTION --------------------------- #
 
-async def dataInsertion(resume):
+async def resume_insertion(resume):
     
     try:
         # --------- SECTION : BASICS --------- #
@@ -559,7 +559,7 @@ async def resumeInsert(request):
     checkList = list(validator.iter_errors(resume))
     if len(checkList) == 0:
         print("no validation issue")
-        resumeId = await dataInsertion(resume)
+        resumeId = await resume_insertion(resume)
 
     return JSONResponse(resumeId)
 

@@ -1,257 +1,294 @@
-from itsdangerous import exc
-from sqlalchemy import schema, create_engine
-from sqlalchemy.orm import Session
+
+from resumeTables import *
+from sqlalchemy import schema
+from sqlalchemy.orm import sessionmaker
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 from jsonschema import Draft7Validator
 import json
-
-connect = create_engine(
-    'mysql+mysqlconnector://root:password@localhost/resumedata', connect_args={'auth_plugin': 'mysql_native_password'})
-print(connect)
-
+import databases
 
 with open('validationSchema.json') as sc:
     schema = json.load(sc)
 
+print(engine)
+
+# database = databases.Database('mysql+mysqlconnector://root:password@localhost/resumedata', connect_args={'auth_plugin': 'mysql_native_password'} )
+# print(database)
+
+
 
 # ------------------- RESUME INSERTION --------------------------- #
 
-
 async def dataInsertion(resume):
-    with Session(connect) as session:
+    
+    try:
+        # --------- SECTION : BASICS --------- #
+        
+        basics_dict = {}
+        basics = resume["basics"]
+        for i in basics:
+            basics_dict[i] = basics[i]
+        basics_dict["coverLetter"] = resume["coverLetter"]
+        basics_query = basics_information.insert()
+        connect_engine.execute(basics_query, **basics_dict)
+
+        max_id = connect_engine.execute(f"select max(id) from basics_information").fetchall()
+        for i in max_id:
+            resumeId = i[0]
+
+        basics_location_dict = {}
+        basics_location_dict["resumeId"] = resumeId
+        basicslocation = resume["basics"]["location"]
+        for i in basicslocation:
+            basics_location_dict[i] = basicslocation[i]
+        basics_location_query = basics_location.insert()
+        connect_engine.execute(basics_location_query, **basics_location_dict)
+
+        basics_profiles_dict = {}
+        basics_profiles_dict["resumeId"] = resumeId
+        basicsprofiles = resume["basics"]["profiles"]
+        for i in basicsprofiles:
+            for n in i:
+                basics_profiles_dict[n] = i[n]
+            basics_profiles_query = basics_profiles.insert()
+            connect_engine.execute(basics_profiles_query, **basics_profiles_dict)
+
+        # --------- SECTION : WORK --------- #
+        work_dict = {}
+        work_highlights_dict = {}
+        work_keywords_dict = {}
+        work_id = 1
+        work_dict["resumeId"] = resumeId
+        work_dict["id"] = work_id
+        work_data = resume["work"]
+        for i in work_data:
+            for n in i:
+                work_dict[n] = i[n]
+            work_query = work.insert()
+            connect_engine.execute(work_query,**work_dict)
+
+            work_highlights_data = work_dict["highlights"]
+            work_highlights_dict["resumeId"] = resumeId
+            work_highlights_dict["workId"] = work_id
+            for whd in work_highlights_data:
+                work_highlights_dict["value"] = whd
+                work_highlights_query = work_highlights.insert()
+                connect_engine.execute(work_highlights_query,**work_highlights_dict)
+            
+            work_keywords_data = work_dict["keywords"]
+            work_keywords_dict["resumeId"] = resumeId
+            work_keywords_dict["workId"] = work_id
+            for wkd in work_keywords_data:
+                work_keywords_dict["value"] = wkd
+                work_keywords_query = work_keywords.insert()
+                connect_engine.execute(work_keywords_query,**work_keywords_dict)
+
+            work_id = work_id + 1
+
         try:
-            # --------- SECTION : BASICS --------- #
-            coverLetter = resume["coverLetter"]
-            basicsName = resume["basics"]["name"]
-            basicsLabel = resume["basics"]["label"]
-            basicsImage = resume["basics"]["image"]
-            basicsEmail = resume["basics"]["email"]
-            basicsPhone = resume["basics"]["phone"]
-            basicsUrl = resume["basics"]["url"]
-            basicsSummary = resume["basics"]["summary"]
-            session.execute(
-                f"insert into resume(coverLetter,name,label,image,email,phone,url,summary) values('{coverLetter}','{ basicsName}','{ basicsLabel}','{ basicsImage}','{ basicsEmail}','{ basicsPhone}','{ basicsUrl}','{ basicsSummary}')")
-            idTaking = session.execute(
-                f"select max(id) from resume").fetchall()
-            for i in idTaking:
-                resumeId = i[0]
+            # ---------- SECTION : VOLUNTEER --------- #
+            volunteer_data = resume["volunteer"]
+            volunteer_dict = {}
+            volunteer_highlights_dict = {}
+            volunteer_id = 1
+            volunteer_dict["resumeId"] = resumeId
+            volunteer_dict["id"] = volunteer_id
+            for i in volunteer_data:
+                for n in i:
+                    volunteer_dict[n] = i[n]
+                volunteer_query = volunteer.insert()
+                connect_engine.execute(volunteer_query, **volunteer_dict)
 
-            locationAddress = resume["basics"]["location"]["address"]
-            locationPostalCode = resume["basics"]["location"]["postalCode"]
-            locationCity = resume["basics"]["location"]["city"]
-            locationCountyCode = resume["basics"]["location"]["countryCode"]
-            locationRegion = resume["basics"]["location"]["region"]
-            session.execute(
-                f"insert into basics_location values({resumeId},'{locationAddress}','{locationPostalCode}','{locationCity}','{locationCountyCode}','{locationRegion}')")
-
-            profiles = resume["basics"]["profiles"]
-            for i in profiles:
-                bp_network = i["network"]
-                bp_username = i["username"]
-                bp_url = i["url"]
-                session.execute(
-                    f"insert into basics_profiles values({resumeId},'{bp_network}','{bp_username}','{bp_url}')")
-
-            # --------- SECTION : WORK --------- #
-            work = resume["work"]
-            workId = 1
-            for i in work:
-                workName = i["name"]
-                workLocation = i["location"]
-                workDescription = i["description"]
-                workPosition = i["position"]
-                workUrl = i["url"]
-                workStartDate = i["startDate"]
-                workEndDate = i["endDate"]
-                workSummary = i["summary"]
-                workHighlights = i["highlights"]
-                workKeywords = i["keywords"]
-                session.execute(
-                    f"insert into work values({resumeId},{workId},'{workName}','{workLocation}','{workDescription}','{workPosition}','{workUrl}','{workStartDate}','{workEndDate}','{workSummary}')")
-                for m in workHighlights:
-                    highValues = m
-                    session.execute(
-                        f"insert into work_highlights values({resumeId},{workId},'{highValues}')")
-                for n in workKeywords:
-                    workKeywordsVal = n
-                    session.execute(
-                        f"insert into work_keywords values({resumeId},{workId},'{workKeywordsVal}')")
-                workId = workId + 1
-
-            try:
-                # ---------- SECTION : VOLUNTEER --------- #
-                volunteer = resume["volunteer"]
-                volunteerId = 1
-                for i in volunteer:
-                    volunteerOrganization = i["organization"]
-                    volunteerPosition = i["position"]
-                    volunteerUrl = i["url"]
-                    volunteerStartDate = i["startDate"]
-                    volunteerEndDate = i["endDate"]
-                    volunteerSummary = i["summary"]
-                    volunteerHighlights = i["highlights"]
-                    session.execute(
-                        f"insert into volunteer values({resumeId},{volunteerId},'{volunteerOrganization}','{volunteerPosition}','{volunteerUrl}','{volunteerStartDate}','{volunteerEndDate}','{volunteerSummary}')")
-
-                    for s in volunteerHighlights:
-                        vHighValues = s
-                        session.execute(
-                            f"insert into volunteer_highlights values({resumeId},{volunteerId},'{vHighValues}')")
-                    volunteerId = volunteerId + 1
-            except:
-                print("No volunteer datas. ")
-
-
-            # ---------- SECTION : EDUCATION ---------- #
-            education = resume["education"]
-            educationId = 1
-            for i in education:
-                educationInstitution = i["institution"]
-                educationUrl = i["url"]
-                educationArea = i["area"]
-                educationStudyType = i["studyType"]
-                educationStartDate = i["startDate"]
-                educationEndDate = i["endDate"]
-                educationScore = i["score"]
-                educationCourses = i["courses"]
-                session.execute(
-                    f"insert into education values({resumeId},{educationId},'{educationInstitution}','{educationUrl}','{educationArea}','{educationStudyType}','{educationStartDate}','{educationEndDate}','{educationScore}')")
-                for m in educationCourses:
-                    eduCourse = m
-                    session.execute(
-                        f"insert into education_courses values({resumeId},{educationId},'{eduCourse}')")
-                educationId = educationId + 1
-            
-            # --------- SECTION : AWARDS ---------- #
-            try:
-                awards = resume["awards"]
-                for i in awards:
-                    awardsTitle = i["title"]
-                    awardsDate = i["date"]
-                    awardsAwarder = i["awarder"]
-                    awardsSummary = i["summary"]
-                    session.execute(
-                        f"insert into awards values({resumeId},'{awardsTitle}','{awardsDate}','{awardsAwarder}','{awardsSummary}')")
-            except:
-                print("No awards datas. ")
-
-            # --------- SECTION : CERTIFICATES --------- #
-            try:
-                certificates = resume["certificates"]
-                for i in certificates:
-                    certName = i["name"]
-                    certDate = i["date"]
-                    certUrl = i["url"]
-                    certIssuer = i["issuer"]
-                    session.execute(
-                        f"insert into certificates values({resumeId},'{certName}','{certDate}','{certUrl}','{certIssuer}')")
-            except:
-                print("No certificates datas.")
-
-            # --------- SECTION : PUBLICATIONS --------- #
-            try:
-                publications = resume["publications"]
-                for i in publications:
-                    pubName = i["name"]
-                    pubPublisher = i["publisher"]
-                    pubReleaseDate = i["releaseDate"]
-                    pubUrl = i["url"]
-                    pubSummary = i["summary"]
-                    session.execute(
-                        f"insert into publications values({resumeId},'{pubName}','{pubPublisher}','{pubReleaseDate}','{pubUrl}','{pubSummary}')")
-            except:
-                print("Publications Data Missing")
-
-            # --------- SECTION : SKILLS --------- #
-            skills = resume["skills"]
-            skillId = 1
-            for i in skills:
-                skillName = i["name"]
-                skilLevel = i["level"]
-                skillKeywords = i["keywords"]
-                session.execute(
-                    f"insert into skills values({resumeId},{skillId},'{skillName}','{skilLevel}')")
-                for n in skillKeywords:
-                    keywordValues = n
-                    session.execute(
-                        f"insert into skills_keywords values({resumeId},{skillId},'{keywordValues}')")
-                skillId = skillId + 1
-
-            # --------- SECTION : LANGUAGES --------- #
-            languages = resume["languages"]
-            for i in languages:
-                langLanguage = i["language"]
-                langFluency = i["fluency"]
-                session.execute(
-                    f"insert into languages values({resumeId},'{langLanguage}','{langFluency}')")
-
-            # --------- SECTION : INTERESTS --------- #
-            interests = resume["interests"]
-            intId = 1
-            for i in interests:
-                interestsName = i["name"]
-                interestsKeyWord = i["keywords"]
-                session.execute(
-                    f"insert into interests values({resumeId},{intId},'{interestsName}')")
-
-                for n in interestsKeyWord:
-                    intrKeywords = n
-                    session.execute(
-                        f"insert into interests_keywords values({resumeId},{intId},'{intrKeywords}')")
-                intId = intId + 1
-            
-            # --------- SECTION : REFERENCES --------- #
-            try:
-                references = resume["references"]
-                for i in references:
-                    refName = i["name"]
-                    refReference = i["reference"]
-                    session.execute(
-                        f"insert into `references` values({resumeId},'{refName}','{refReference}')")
-            except:
-                print("No Referenecs included")
-
-            # --------- SECTION : PROJECTS --------- #
-            projects = resume["projects"]
-            proId = 1
-            for i in projects:
-                projectName = i["name"]
-                projectDescription = i["description"]
-                projectStartDate = i["startDate"]
-                projectEndDate = i["endDate"]
-                projectUrl = i["url"]
-                projectEntity = i["entity"]
-                projectType = i["type"]
-                projectHighlights = i["highlights"]
-                projectKeywords = i["keywords"]
-                projectRoles = i["roles"]
-                session.execute(
-                    f"insert into projects values({resumeId},{proId},'{projectName}','{projectDescription}','{projectStartDate}','{projectEndDate}','{projectUrl}','{projectEntity}','{projectType}')")
-                for n in projectHighlights:
-                    projectHighValues = n
-                    session.execute(
-                        f"insert into projects_highlights values({resumeId},{proId},'{projectHighValues}')")
-
-                for m in projectKeywords:
-                    projectKeyValues = m
-                    session.execute(
-                        f"insert into projects_keywords values({resumeId},{proId},'{projectKeyValues}')")
-
-                for r in projectRoles:
-                    projectRolesValues = r
-                    session.execute(
-                        f"insert into projects_roles values({resumeId},{proId},'{projectRolesValues}')")
-                proId = proId + 1
+                volunteer_highlights_data = volunteer_dict["highlights"]
+                volunteer_highlights_dict["resumeId"] = resumeId
+                volunteer_highlights_dict["volunteerId"] = "1"
+                for vhd in volunteer_highlights_data:
+                    volunteer_highlights_dict["value"] = vhd
+                    volunteer_highlights_query = volunteer_highlights.insert()
+                    connect_engine.execute(volunteer_highlights_query,**volunteer_highlights_dict)
+            volunteer_id = volunteer_id + 1
         except:
-            print("error")
-            session.rollback()
-            raise Exception("Data Insertion Error")
-        else:
-            session.commit()
-        finally:
-            session.close()
+            print("No volunteer datas. ")
+
+
+        # ---------- SECTION : EDUCATION ---------- #
+        education_data = resume["education"]
+        education_dict = {}
+        education_courses_dict = {}
+        education_id = 1
+        education_dict["resumeId"] = resumeId
+        education_dict["id"] = education_id
+        for i in education_data:
+            for n in i:
+                education_dict[n] = i[n]
+            education_query = education.insert()
+            connect_engine.execute(education_query, **education_dict)
+
+            education_courses_data = education_dict["courses"]
+            education_courses_dict["resumeId"] = resumeId
+            education_courses_dict["educationId"] = education_id
+            for ecd in education_courses_data:
+                education_courses_dict["value"] = ecd
+                education_courses_query = education_courses.insert()
+                connect_engine.execute(education_courses_query,**education_courses_dict)
+            education_id = education_id + 1
+        
+        # --------- SECTION : AWARDS ---------- #
+        try:
+            awards_data = resume["awards"]
+            awards_dict = {}
+            awards_dict["resumeId"] = resumeId
+            for i in awards_data:
+                for n in i:
+                    awards_dict[n] = i[n]
+                awards_query = awards.insert()
+                connect_engine.execute(awards_query, **awards_dict)
+
+        except:
+            print("No awards datas. ")
+
+        # --------- SECTION : CERTIFICATES --------- #
+        try:
+            certificates_data = resume["certificates"]
+            certificates_dict = {}
+            certificates_dict["resumeId"] = resumeId
+            for i in certificates_data:
+                for n in i:
+                    certificates_dict[n] = i[n]
+                certificates_query = certificates.insert()
+                connect_engine.execute(certificates_query, **certificates_dict)
+        except:
+            print("No certificates datas.")
+
+        # --------- SECTION : PUBLICATIONS --------- #
+        try:
+            publications_data = resume["publications"]
+            publications_dict = {}
+            publications_dict["resumeId"] = resumeId
+            for i in publications_data:
+                for n in i:
+                    publications_dict[n] = i[n]
+                publications_query = publications.insert()
+                connect_engine.execute(publications_query, **publications_dict)
+        except:
+            print("Publications Data Missing")
+
+        # --------- SECTION : SKILLS --------- #
+        skills_data = resume["skills"]
+        skills_dict = {}
+        skills_keywords_dict = {}
+        skills_id = 1
+        skills_dict["resumeId"] = resumeId
+        skills_dict["id"] = skills_id
+        for i in skills_data:
+            for n in i:
+                skills_dict[n] = i[n]
+            skills_query = skills.insert()
+            connect_engine.execute(skills_query, **skills_dict)
+
+            skills_keywords_data = skills_dict["keywords"]
+            skills_keywords_dict["resumeId"] = resumeId
+            skills_keywords_dict["skillsId"] = "1"
+            for skd in skills_keywords_data:
+                skills_keywords_dict["value"] = skd
+                skills_keywords_query = skills_keywords.insert()
+                connect_engine.execute(skills_keywords_query,**skills_keywords_dict)
+            skills_id = skills_id + 1
+
+        # --------- SECTION : LANGUAGES --------- #
+        languages_data = resume["languages"]
+        languages_dict = {}
+        languages_dict["resumeId"] = resumeId
+        for i in languages_data:
+            for n in i:
+                languages_dict[n] = i[n]
+            languages_query = languages.insert()
+            connect_engine.execute(languages_query, **languages_dict)
+
+        # --------- SECTION : INTERESTS --------- #
+        interests_data = resume["interests"]
+        interests_dict = {}
+        interests_keywords_dict = {}
+        interests_id = 1
+        interests_dict["resumeId"] = resumeId
+        interests_dict["id"] = interests_id
+        for i in interests_data:
+            for n in i:
+                interests_dict[n] = i[n]
+            interests_query = interests.insert()
+            connect_engine.execute(interests_query, **interests_dict)
+
+            interests_keywords_data = interests_dict["keywords"]
+            interests_keywords_dict["resumeId"] = resumeId
+            interests_keywords_dict["interestsId"] = "1"
+            for ikd in interests_keywords_data:
+                interests_keywords_dict["value"] = ikd
+                interests_keywords_query = interests_keywords.insert()
+                connect_engine.execute(interests_keywords_query,**interests_keywords_dict)
+            interests_id = interests_id + 1
+        
+        # --------- SECTION : REFERENCES --------- #
+        try:
+            references_data = resume["references"]
+            references_dict = {}
+            references_dict["resumeId"] = resumeId
+            for i in references_data:
+                for n in i:
+                    references_dict[n] = i[n]
+                references_query = references.insert()
+                connect_engine.execute(references_query, **references_dict)
+        except:
+            print("No Referenecs included")
+
+        # --------- SECTION : PROJECTS --------- #
+        projects_data = resume["projects"]
+        projects_dict = {}
+        projects_keywords_dict = {}
+        projects_highlights_dict = {}
+        projects_roles_dict = {}
+        projects_id = 1
+        projects_dict["resumeId"] = resumeId
+        projects_dict["id"] = projects_id
+        for i in projects_data:
+            for n in i:
+                projects_dict[n] = i[n]
+            projects_query = projects.insert()
+            connect_engine.execute(projects_query, **projects_dict)
+
+            projects_highlights_data = projects_dict["highlights"]
+            projects_highlights_dict["resumeId"] = resumeId
+            projects_highlights_dict["projectsId"] = projects_id
+            for phd in projects_highlights_data:
+                projects_highlights_dict["value"] = phd
+                projects_highlights_query = projects_highlights.insert()
+                connect_engine.execute(projects_highlights_query,**projects_highlights_dict)
+
+            projects_keywords_data = projects_dict["keywords"]
+            projects_keywords_dict["resumeId"] = resumeId
+            projects_keywords_dict["projectsId"] = projects_id
+            for pkd in projects_keywords_data:
+                projects_keywords_dict["value"] = pkd
+                projects_keywords_query = projects_keywords.insert()
+                connect_engine.execute(projects_keywords_query,**projects_keywords_dict)
+
+            projects_roles_data = projects_dict["roles"]
+            projects_roles_dict["resumeId"] = resumeId
+            projects_roles_dict["projectsId"] = projects_id
+            for prd in projects_roles_data:
+                projects_roles_dict["value"] = prd
+                projects_roles_query = projects_roles.insert()
+                connect_engine.execute(projects_roles_query,**projects_roles_dict)
+            projects_id + projects_id + 1
+    except:
+        print("error")
+    #     session.rollback()
+    #     raise Exception("Data Insertion Error")
+    # else:
+    #     session.commit()
+    # finally:
+    #     session.close()
 
     return resumeId
 
@@ -260,31 +297,31 @@ async def dataInsertion(resume):
 
 
 async def fetchResume():
-    outResult = connect.execute(
-        "select * from resume inner join basics_location on resume.id = basics_location.resumeId;").fetchall()
-    bpResult = connect.execute("select * from basics_profiles").fetchall()
-    wrResults = connect.execute("select * from work").fetchall()
-    whResults = connect.execute("select * from work_highlights").fetchall()
-    wkResults = connect.execute("select * from work_keywords").fetchall()
-    vResults = connect.execute("select * from volunteer").fetchall()
-    vhResults = connect.execute(
+    outResult = engine.execute(
+        "select * from basics_information inner join basics_location on basics_information.id = basics_location.resumeId;").fetchall()
+    bpResults = engine.execute("select * from basics_profiles").fetchall()
+    wrResults = engine.execute("select * from work").fetchall()
+    whResults = engine.execute("select * from work_highlights").fetchall()
+    wkResults = engine.execute("select * from work_keywords").fetchall()
+    vResults = engine.execute("select * from volunteer").fetchall()
+    vhResults = engine.execute(
         "select * from volunteer_highlights").fetchall()
-    eResults = connect.execute("select * from education").fetchall()
-    ecResults = connect.execute("select * from education_courses").fetchall()
-    awResults = connect.execute("select * from awards").fetchall()
-    pResults = connect.execute("select * from publications").fetchall()
-    cResults = connect.execute("select * from certificates").fetchall()
-    sResults = connect.execute("select * from skills").fetchall()
-    skResults = connect.execute("select * from skills_keywords").fetchall()
-    lResults = connect.execute("select * from languages").fetchall()
-    iResults = connect.execute("select * from interests").fetchall()
-    ikResults = connect.execute("select * from interests_keywords").fetchall()
-    rResults = connect.execute("select * from `references`").fetchall()
-    proResults = connect.execute("select * from projects").fetchall()
-    prohResults = connect.execute(
+    eResults = engine.execute("select * from education").fetchall()
+    ecResults = engine.execute("select * from education_courses").fetchall()
+    awResults = engine.execute("select * from awards").fetchall()
+    pResults = engine.execute("select * from publications").fetchall()
+    cResults = engine.execute("select * from certificates").fetchall()
+    sResults = engine.execute("select * from skills").fetchall()
+    skResults = engine.execute("select * from skills_keywords").fetchall()
+    lResults = engine.execute("select * from languages").fetchall()
+    iResults = engine.execute("select * from interests").fetchall()
+    ikResults = engine.execute("select * from interests_keywords").fetchall()
+    rResults = engine.execute("select * from `references`").fetchall()
+    proResults = engine.execute("select * from projects").fetchall()
+    prohResults = engine.execute(
         "select * from projects_highlights").fetchall()
-    prokResults = connect.execute("select * from projects_keywords").fetchall()
-    prorResults = connect.execute("select * from projects_roles").fetchall()
+    prokResults = engine.execute("select * from projects_keywords").fetchall()
+    prorResults = engine.execute("select * from projects_roles").fetchall()
 
     resume = [
         {
@@ -311,7 +348,7 @@ async def fetchResume():
                         "username":p["username"],
                         "url":p["url"]
                     }
-                    for p in bpResult
+                    for p in bpResults
                     if p["resumeId"] == i["id"]
                 ]
             },
@@ -350,7 +387,7 @@ async def fetchResume():
                     "highlights":[
                         vh["value"]
                         for vh in vhResults
-                        if vh["resumeId"] == i["id"] and vh["volId"] == v["id"]
+                        if vh["resumeId"] == i["id"] and vh["volunteerId"] == v["id"]
                     ]
                 }
                 for v in vResults
@@ -368,7 +405,7 @@ async def fetchResume():
                     "courses":[
                         ec["value"]
                         for ec in ecResults
-                        if ec["resumeId"] == i["id"] and ec["eduId"] == e["id"]
+                        if ec["resumeId"] == i["id"] and ec["educationId"] == e["id"]
                     ]
                 }
                 for e in eResults
@@ -412,7 +449,7 @@ async def fetchResume():
                     "keywords":[
                         sk["value"]
                         for sk in skResults
-                        if sk["resumeId"] == i["id"] and sk["skillId"] == s["id"]
+                        if sk["resumeId"] == i["id"] and sk["skillsId"] == s["id"]
                     ]
                 }
                 for s in sResults
@@ -432,7 +469,7 @@ async def fetchResume():
                     "keywords":[
                         ik["value"]
                         for ik in ikResults
-                        if ik["resumeId"] == i["id"] and ik["intrId"] == intre["id"]
+                        if ik["resumeId"] == i["id"] and ik["interestsId"] == intre["id"]
                     ]
                 }
                 for intre in iResults
@@ -453,12 +490,12 @@ async def fetchResume():
                     "highlights":[
                         prh["value"]
                         for prh in prohResults
-                        if prh["resumeId"] == i["id"] and prh["proId"] == pr["id"]
+                        if prh["resumeId"] == i["id"] and prh["projectsId"] == pr["id"]
                     ],
                     "keywords":[
                         prk["value"]
                         for prk in prokResults
-                        if prk["resumeId"] == i["id"] and prk["proId"] == pr["id"]
+                        if prk["resumeId"] == i["id"] and prk["projectsId"] == pr["id"]
                     ],
                     "startDate":pr["startDate"],
                     "endDate":pr["endDate"],
@@ -466,7 +503,7 @@ async def fetchResume():
                     "roles":[
                         prro["value"]
                         for prro in prorResults
-                        if prro["resumeId"] == i["id"] and prro["proId"] == pr["id"]
+                        if prro["resumeId"] == i["id"] and prro["projectsId"] == pr["id"]
                     ],
                     "entity":pr["entity"],
                     "type":pr["type"]

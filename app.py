@@ -288,7 +288,8 @@ async def resume_insertion(resume):
 # ---------------------------- GET RESUME -------------------------------- #
 
 
-async def fetchResume():
+async def fetch_all_resume():
+
     outResult = engine.execute(
         "select * from basics_information inner join basics_location on basics_information.id = basics_location.resumeId;").fetchall()
     bpResults = engine.execute("select * from basics_profiles").fetchall()
@@ -508,7 +509,6 @@ async def fetchResume():
         for i in outResult
     ]
 
-
     return resume
 
 # -------------------------------------------------------------------- #
@@ -517,10 +517,10 @@ async def fetchResume():
 # -------------- GET PARAMETERED RESUME ------------------------ #
 
 
-async def resumeGetOne(request):
+async def requested_resume(request):
     userPassId = request.path_params['pid']
-    fetchedResume = await fetchResume()
-    for i in fetchedResume:
+    resumes = await fetch_all_resume()
+    for i in resumes:
         if i["id"] == userPassId:
             parmResume = dict(
                 [
@@ -538,13 +538,13 @@ async def resumeGetOne(request):
 # --------------------------------------------------------------- #
 
 
-async def resumeGetAll(request):
-    jsonout = await fetchResume()
+async def resumes_fetch(request):
+    jsonout = await fetch_all_resume()
 
     return JSONResponse(jsonout)
 
 
-async def resumeInsert(request):
+async def resume_validate_and_insert(request):
     # -----  VALIDATION  ----- #
     resume = await request.json()
     validator = Draft7Validator(schema)
@@ -557,7 +557,7 @@ async def resumeInsert(request):
 
 
 app = Starlette(debug=True,  routes=[
-    Route('/resume', resumeGetAll, methods=['GET']),
-    Route('/', resumeInsert, methods=['POST']),
-    Route('/resume/{pid:int}', resumeGetOne, methods=['GET']),
+    Route('/resume', resumes_fetch, methods=['GET']),
+    Route('/', resume_validate_and_insert, methods=['POST']),
+    Route('/resume/{pid:int}', requested_resume, methods=['GET']),
 ])

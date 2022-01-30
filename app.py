@@ -1,23 +1,14 @@
 
 from resumeTables import *
 from sqlalchemy import schema
-from sqlalchemy.orm import Session
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 from jsonschema import Draft7Validator
 import json
-import databases
 
 with open('validationSchema.json') as sc:
     schema = json.load(sc)
-
-print(engine)
-
-# database = databases.Database('mysql+://root:password@localhost/resumedata', connect_args={'auth_plugin': 'mysql_native_password'} )
-# print(database)
-
-
 
 # ------------------- RESUME INSERTION --------------------------- #
 

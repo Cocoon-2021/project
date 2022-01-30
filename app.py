@@ -290,10 +290,10 @@ async def resume_insertion(resume):
 
 async def fetch_all_resume():
 
-    outResult = engine.execute(
+    basics_information_results = engine.execute(
         "select * from basics_information inner join basics_location on basics_information.id = basics_location.resumeId;").fetchall()
-    bpResults = engine.execute("select * from basics_profiles").fetchall()
-    wrResults = engine.execute("select * from work").fetchall()
+    basics_profiles_results = engine.execute("select * from basics_profiles").fetchall()
+    work_results = engine.execute("select * from work").fetchall()
     whResults = engine.execute("select * from work_highlights").fetchall()
     wkResults = engine.execute("select * from work_keywords").fetchall()
     vResults = engine.execute("select * from volunteer").fetchall()
@@ -341,7 +341,7 @@ async def fetch_all_resume():
                         "username":p["username"],
                         "url":p["url"]
                     }
-                    for p in bpResults
+                    for p in basics_profiles_results
                     if p["resumeId"] == i["id"]
                 ]
             },
@@ -366,7 +366,7 @@ async def fetch_all_resume():
                         if wk["resumeId"] == i["id"] and wk["workId"] == w["id"]
                     ]
                 }
-                for w in wrResults
+                for w in work_results
                 if w["resumeId"] == i["id"]
             ],
             "volunteer":[
@@ -506,7 +506,7 @@ async def fetch_all_resume():
                 if pr["resumeId"] == i["id"]
             ]
         }
-        for i in outResult
+        for i in basics_information_results
     ]
 
     return resume
@@ -518,11 +518,11 @@ async def fetch_all_resume():
 
 
 async def requested_resume(request):
-    userPassId = request.path_params['pid']
+    user_requested_id = request.path_params['pid']
     resumes = await fetch_all_resume()
     for i in resumes:
-        if i["id"] == userPassId:
-            parmResume = dict(
+        if i["id"] == user_requested_id:
+            passed_resume = dict(
                 [
                     (key, value)
                     for key, value in i.items()
@@ -531,9 +531,9 @@ async def requested_resume(request):
             )
             break
         else:
-            parmResume = "empty"
+            passed_resume = "empty"
 
-    return JSONResponse(parmResume)
+    return JSONResponse(passed_resume)
 
 # --------------------------------------------------------------- #
 
@@ -548,8 +548,8 @@ async def resume_validate_and_insert(request):
     # -----  VALIDATION  ----- #
     resume = await request.json()
     validator = Draft7Validator(schema)
-    checkList = list(validator.iter_errors(resume))
-    if len(checkList) == 0:
+    error_list = list(validator.iter_errors(resume))
+    if len(error_list) == 0:
         print("no validation issue")
         resumeId = await resume_insertion(resume)
 

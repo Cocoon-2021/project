@@ -19,9 +19,9 @@ async def resume_insertion(resume):
                 # --------- SECTION : BASICS --------- #
                 
                 basics_dict = {}
-                basics = resume["basics"]
-                for i in basics:
-                    basics_dict[i] = basics[i]
+                basics_information_data = resume["basics"]
+                for i in basics_information_data:
+                    basics_dict[i] = basics_information_data[i]
                 basics_dict["coverLetter"] = resume["coverLetter"]
                 basics_query = basics_information.insert()
                 session.execute(basics_query, **basics_dict)
@@ -32,16 +32,16 @@ async def resume_insertion(resume):
 
                 basics_location_dict = {}
                 basics_location_dict["resumeId"] = resumeId
-                basicslocation = resume["basics"]["location"]
-                for i in basicslocation:
-                    basics_location_dict[i] = basicslocation[i]
+                basics_location_data = resume["basics"]["location"]
+                for i in basics_location_data:
+                    basics_location_dict[i] = basics_location_data[i]
                 basics_location_query = basics_location.insert()
                 session.execute(basics_location_query, **basics_location_dict)
 
                 basics_profiles_dict = {}
                 basics_profiles_dict["resumeId"] = resumeId
-                basicsprofiles = resume["basics"]["profiles"]
-                for i in basicsprofiles:
+                basics_profiles_data = resume["basics"]["profiles"]
+                for i in basics_profiles_data:
                     for n in i:
                         basics_profiles_dict[n] = i[n]
                     basics_profiles_query = basics_profiles.insert()
@@ -294,27 +294,27 @@ async def fetch_all_resume():
         "select * from basics_information inner join basics_location on basics_information.id = basics_location.resumeId;").fetchall()
     basics_profiles_results = engine.execute("select * from basics_profiles").fetchall()
     work_results = engine.execute("select * from work").fetchall()
-    whResults = engine.execute("select * from work_highlights").fetchall()
-    wkResults = engine.execute("select * from work_keywords").fetchall()
-    vResults = engine.execute("select * from volunteer").fetchall()
-    vhResults = engine.execute(
+    work_highlights_results = engine.execute("select * from work_highlights").fetchall()
+    work_keywords_results = engine.execute("select * from work_keywords").fetchall()
+    volunteer_results = engine.execute("select * from volunteer").fetchall()
+    volunteer_highlights_results = engine.execute(
         "select * from volunteer_highlights").fetchall()
-    eResults = engine.execute("select * from education").fetchall()
-    ecResults = engine.execute("select * from education_courses").fetchall()
-    awResults = engine.execute("select * from awards").fetchall()
-    pResults = engine.execute("select * from publications").fetchall()
-    cResults = engine.execute("select * from certificates").fetchall()
-    sResults = engine.execute("select * from skills").fetchall()
-    skResults = engine.execute("select * from skills_keywords").fetchall()
-    lResults = engine.execute("select * from languages").fetchall()
-    iResults = engine.execute("select * from interests").fetchall()
-    ikResults = engine.execute("select * from interests_keywords").fetchall()
-    rResults = engine.execute("select * from `references`").fetchall()
-    proResults = engine.execute("select * from projects").fetchall()
-    prohResults = engine.execute(
+    education_results = engine.execute("select * from education").fetchall()
+    education_courses_results = engine.execute("select * from education_courses").fetchall()
+    awards_results = engine.execute("select * from awards").fetchall()
+    publications_results = engine.execute("select * from publications").fetchall()
+    certificates_results = engine.execute("select * from certificates").fetchall()
+    skills_results = engine.execute("select * from skills").fetchall()
+    skills_keywords_results = engine.execute("select * from skills_keywords").fetchall()
+    languages_results = engine.execute("select * from languages").fetchall()
+    interests_results = engine.execute("select * from interests").fetchall()
+    interests_keywords_results = engine.execute("select * from interests_keywords").fetchall()
+    references_results = engine.execute("select * from `references`").fetchall()
+    projects_results = engine.execute("select * from projects").fetchall()
+    projects_highlights_results = engine.execute(
         "select * from projects_highlights").fetchall()
-    prokResults = engine.execute("select * from projects_keywords").fetchall()
-    prorResults = engine.execute("select * from projects_roles").fetchall()
+    projects_keywords_results = engine.execute("select * from projects_keywords").fetchall()
+    projects_roles_results = engine.execute("select * from projects_roles").fetchall()
 
     resume = [
         {
@@ -357,12 +357,12 @@ async def fetch_all_resume():
                     "summary":w["summary"],
                     "highlights":[
                         wh["value"]
-                        for wh in whResults
+                        for wh in work_highlights_results
                         if wh["resumeId"] == i["id"] and wh["workId"] == w["id"]
                     ],
                     "keywords":[
                         wk["value"]
-                        for wk in wkResults
+                        for wk in work_keywords_results
                         if wk["resumeId"] == i["id"] and wk["workId"] == w["id"]
                     ]
                 }
@@ -379,11 +379,11 @@ async def fetch_all_resume():
                     "summary":v["summary"],
                     "highlights":[
                         vh["value"]
-                        for vh in vhResults
+                        for vh in volunteer_highlights_results
                         if vh["resumeId"] == i["id"] and vh["volunteerId"] == v["id"]
                     ]
                 }
-                for v in vResults
+                for v in volunteer_results
                 if v["resumeId"] == i["id"]
             ],
             "education":[
@@ -397,11 +397,11 @@ async def fetch_all_resume():
                     "score": e["score"],
                     "courses":[
                         ec["value"]
-                        for ec in ecResults
+                        for ec in education_courses_results
                         if ec["resumeId"] == i["id"] and ec["educationId"] == e["id"]
                     ]
                 }
-                for e in eResults
+                for e in education_results
                 if e["resumeId"] == i["id"]
             ],
             "awards":[
@@ -411,7 +411,7 @@ async def fetch_all_resume():
                     "awarder":a["awarder"],
                     "summary":a["summary"]
                 }
-                for a in awResults
+                for a in awards_results
                 if a["resumeId"] == i["id"]
             ],
             "certificates":[
@@ -421,7 +421,7 @@ async def fetch_all_resume():
                     "url":c["url"],
                     "issuer":c["issuer"]
                 }
-                for c in cResults
+                for c in certificates_results
                 if c["resumeId"] == i["id"]
             ],
             "publications":[
@@ -432,7 +432,7 @@ async def fetch_all_resume():
                     "url":p["url"],
                     "summary":p["summary"]
                 }
-                for p in pResults
+                for p in publications_results
                 if p["resumeId"] == i["id"]
             ],
             "skills":[
@@ -441,11 +441,11 @@ async def fetch_all_resume():
                     "level":s["level"],
                     "keywords":[
                         sk["value"]
-                        for sk in skResults
+                        for sk in skills_keywords_results
                         if sk["resumeId"] == i["id"] and sk["skillsId"] == s["id"]
                     ]
                 }
-                for s in sResults
+                for s in skills_results
                 if s["resumeId"] == i["id"]
             ],
             "languages":[
@@ -453,7 +453,7 @@ async def fetch_all_resume():
                     "language": l["language"],
                     "fluency":l["fluency"]
                 }
-                for l in lResults
+                for l in languages_results
                 if l["resumeId"] == i["id"]
             ],
             "interests":[
@@ -461,11 +461,11 @@ async def fetch_all_resume():
                     "name": intre["name"],
                     "keywords":[
                         ik["value"]
-                        for ik in ikResults
+                        for ik in interests_keywords_results
                         if ik["resumeId"] == i["id"] and ik["interestsId"] == intre["id"]
                     ]
                 }
-                for intre in iResults
+                for intre in interests_results
                 if intre["resumeId"] == i["id"]
             ],
             "references":[
@@ -473,7 +473,7 @@ async def fetch_all_resume():
                     "name": r["name"],
                     "reference":r["reference"]
                 }
-                for r in rResults
+                for r in references_results
                 if r["resumeId"] == i["id"]
             ],
             "projects":[
@@ -482,12 +482,12 @@ async def fetch_all_resume():
                     "description":pr["description"],
                     "highlights":[
                         prh["value"]
-                        for prh in prohResults
+                        for prh in projects_highlights_results
                         if prh["resumeId"] == i["id"] and prh["projectsId"] == pr["id"]
                     ],
                     "keywords":[
                         prk["value"]
-                        for prk in prokResults
+                        for prk in projects_keywords_results
                         if prk["resumeId"] == i["id"] and prk["projectsId"] == pr["id"]
                     ],
                     "startDate":pr["startDate"],
@@ -495,14 +495,14 @@ async def fetch_all_resume():
                     "url":pr["url"],
                     "roles":[
                         prro["value"]
-                        for prro in prorResults
+                        for prro in projects_roles_results
                         if prro["resumeId"] == i["id"] and prro["projectsId"] == pr["id"]
                     ],
                     "entity":pr["entity"],
                     "type":pr["type"]
 
                 }
-                for pr in proResults
+                for pr in projects_results
                 if pr["resumeId"] == i["id"]
             ]
         }

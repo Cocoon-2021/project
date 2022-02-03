@@ -1,3 +1,4 @@
+from typing import Tuple
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, MetaData, ForeignKey, Text
 
@@ -37,7 +38,7 @@ basics_profiles = Table('basics_profiles', resume_metadata,
 
 work = Table('work', resume_metadata,
     Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('id', Integer, nullable=False),
+    Column('workId', Integer, nullable=False, primary_key=True, autoincrement=True),
     Column('name', Text),
     Column('location', Text),
     Column('description', Text),
@@ -49,20 +50,18 @@ work = Table('work', resume_metadata,
     )
 
 work_highlights = Table('work_highlights', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('workId', Integer, nullable=False),
+    Column('workId', Integer, ForeignKey("work.workId"), nullable=False),
     Column('value', Text)
     )
 
 work_keywords = Table('work_keywords', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('workId', Integer, nullable=False),
+    Column('workId', Integer, ForeignKey("work.workId"), nullable=False),
     Column('value', Text)
     )
 
 volunteer = Table('volunteer', resume_metadata,
     Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('id', Integer, nullable=False),
+    Column('volunteerId', Integer,primary_key=True,autoincrement=True, nullable=False),
     Column('organization', Text),
     Column('position', Text),
     Column('url', Text),
@@ -72,14 +71,13 @@ volunteer = Table('volunteer', resume_metadata,
     )
 
 volunteer_highlights = Table('volunteer_highlights', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('volunteerId', Integer, nullable=False),
+    Column('volunteerId', Integer, ForeignKey("volunteer.volunteerId"), nullable=False),
     Column('value', Text)
     )
 
 education = Table('education', resume_metadata,
     Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('id', Integer, nullable=False),
+    Column('educationId', Integer, primary_key=True,autoincrement=True, nullable=False),
     Column('institution', Text),
     Column('url', Text),
     Column('area', Text),
@@ -90,8 +88,7 @@ education = Table('education', resume_metadata,
     )
 
 education_courses = Table('education_courses', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('educationId', Integer, nullable=False),
+    Column('educationId', Integer,ForeignKey("education.educationId"), nullable=False),
     Column('value', Text)
     )
 
@@ -122,14 +119,13 @@ publications = Table('publications', resume_metadata,
 
 skills = Table('skills', resume_metadata,
     Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('id', Integer, nullable=False),
+    Column('skillsId', Integer,primary_key=True, autoincrement=True, nullable=False),
     Column('name', Text),
     Column('level', Text)
     )
 
 skills_keywords = Table('skills_keywords', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('skillsId', Integer, nullable=False),
+    Column('skillsId', Integer, ForeignKey("skills.skillsId"), nullable=False),
     Column('value', Text)
     )
 
@@ -141,13 +137,12 @@ languages = Table('languages', resume_metadata,
 
 interests = Table('interests', resume_metadata,
     Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('id', Integer, nullable=False),
+    Column('interestsId', Integer, primary_key=True, autoincrement=True, nullable=False),
     Column('name', Text)
     )
 
 interests_keywords = Table('interests_keywords', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('interestsId', Integer, nullable=False),
+    Column('interestsId', Integer, ForeignKey("interests.interestsId"), nullable=False),
     Column('value', Text)
     )
 
@@ -159,7 +154,7 @@ references = Table('references', resume_metadata,
 
 projects = Table('projects', resume_metadata,
     Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('id', Integer, nullable=False),
+    Column('projectsId', Integer, primary_key=True, autoincrement=True, nullable=False),
     Column('name', Text),
     Column('description', Text),
     Column('startDate', Text),
@@ -170,20 +165,17 @@ projects = Table('projects', resume_metadata,
     )
 
 projects_highlights = Table('projects_highlights', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('projectsId', Integer, nullable=False),
+    Column('projectsId', Integer, ForeignKey("projects.projectsId"), nullable=False),
     Column('value', Text)
     )
 
 projects_keywords = Table('projects_keywords', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('projectsId', Integer, nullable=False),
+    Column('projectsId', Integer, ForeignKey("projects.projectsId"), nullable=False),
     Column('value', Text)
     )
 
 projects_roles = Table('projects_roles', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('projectsId', Integer, nullable=False),
+    Column('projectsId', Integer, ForeignKey("projects.projectsId"), nullable=False),
     Column('value', Text)
     )
 

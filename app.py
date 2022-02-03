@@ -51,9 +51,7 @@ async def resume_insertion(resume):
                 work_dict = {}
                 work_highlights_dict = {}
                 work_keywords_dict = {}
-                work_id = 1
                 work_dict["resumeId"] = resumeId
-                work_dict["id"] = work_id
                 work_data = resume["work"]
                 for i in work_data:
                     for n in i:
@@ -61,8 +59,11 @@ async def resume_insertion(resume):
                     work_query = work.insert()
                     session.execute(work_query,**work_dict)
 
+                    work_max_id = session.execute(f"select max(workId) from work").fetchall()
+                    for i in work_max_id:
+                        work_id = i[0]
+
                     work_highlights_data = work_dict["highlights"]
-                    work_highlights_dict["resumeId"] = resumeId
                     work_highlights_dict["workId"] = work_id
                     for whd in work_highlights_data:
                         work_highlights_dict["value"] = whd
@@ -70,14 +71,12 @@ async def resume_insertion(resume):
                         session.execute(work_highlights_query,**work_highlights_dict)
                     
                     work_keywords_data = work_dict["keywords"]
-                    work_keywords_dict["resumeId"] = resumeId
                     work_keywords_dict["workId"] = work_id
                     for wkd in work_keywords_data:
                         work_keywords_dict["value"] = wkd
                         work_keywords_query = work_keywords.insert()
                         session.execute(work_keywords_query,**work_keywords_dict)
 
-                    work_id = work_id + 1
 
                 try:
                     # ---------- SECTION : VOLUNTEER --------- #
@@ -86,21 +85,23 @@ async def resume_insertion(resume):
                     volunteer_highlights_dict = {}
                     volunteer_id = 1
                     volunteer_dict["resumeId"] = resumeId
-                    volunteer_dict["id"] = volunteer_id
                     for i in volunteer_data:
                         for n in i:
                             volunteer_dict[n] = i[n]
                         volunteer_query = volunteer.insert()
                         session.execute(volunteer_query, **volunteer_dict)
 
+                        volunteer_max_id = session.execute(f"select max(volunteerId) from volunteer").fetchall()
+                        for i in volunteer_max_id:
+                            volunteer_id = i[0]
+
                         volunteer_highlights_data = volunteer_dict["highlights"]
-                        volunteer_highlights_dict["resumeId"] = resumeId
-                        volunteer_highlights_dict["volunteerId"] = "1"
+                        volunteer_highlights_dict["volunteerId"] = volunteer_id
                         for vhd in volunteer_highlights_data:
                             volunteer_highlights_dict["value"] = vhd
                             volunteer_highlights_query = volunteer_highlights.insert()
                             session.execute(volunteer_highlights_query,**volunteer_highlights_dict)
-                    volunteer_id = volunteer_id + 1
+
                 except:
                     print("No volunteer datas. ")
 
@@ -109,23 +110,23 @@ async def resume_insertion(resume):
                 education_data = resume["education"]
                 education_dict = {}
                 education_courses_dict = {}
-                education_id = 1
                 education_dict["resumeId"] = resumeId
-                education_dict["id"] = education_id
                 for i in education_data:
                     for n in i:
                         education_dict[n] = i[n]
                     education_query = education.insert()
                     session.execute(education_query, **education_dict)
 
+                    education_max_id = session.execute(f"select max(educationId) from education").fetchall()
+                    for i in education_max_id:
+                        education_id = i[0]
+
                     education_courses_data = education_dict["courses"]
-                    education_courses_dict["resumeId"] = resumeId
                     education_courses_dict["educationId"] = education_id
                     for ecd in education_courses_data:
                         education_courses_dict["value"] = ecd
                         education_courses_query = education_courses.insert()
                         session.execute(education_courses_query,**education_courses_dict)
-                    education_id = education_id + 1
                 
                 # --------- SECTION : AWARDS ---------- #
                 try:
@@ -171,18 +172,19 @@ async def resume_insertion(resume):
                 skills_data = resume["skills"]
                 skills_dict = {}
                 skills_keywords_dict = {}
-                skills_id = 1
                 skills_dict["resumeId"] = resumeId
-                skills_dict["id"] = skills_id
                 for i in skills_data:
                     for n in i:
                         skills_dict[n] = i[n]
                     skills_query = skills.insert()
                     session.execute(skills_query, **skills_dict)
 
+                    skills_max_id = session.execute(f"select max(skillsId) from skills").fetchall()
+                    for i in skills_max_id:
+                        skills_id = i[0]
+
                     skills_keywords_data = skills_dict["keywords"]
-                    skills_keywords_dict["resumeId"] = resumeId
-                    skills_keywords_dict["skillsId"] = "1"
+                    skills_keywords_dict["skillsId"] = skills_id
                     for skd in skills_keywords_data:
                         skills_keywords_dict["value"] = skd
                         skills_keywords_query = skills_keywords.insert()
@@ -203,23 +205,24 @@ async def resume_insertion(resume):
                 interests_data = resume["interests"]
                 interests_dict = {}
                 interests_keywords_dict = {}
-                interests_id = 1
                 interests_dict["resumeId"] = resumeId
-                interests_dict["id"] = interests_id
                 for i in interests_data:
                     for n in i:
                         interests_dict[n] = i[n]
                     interests_query = interests.insert()
                     session.execute(interests_query, **interests_dict)
 
+                    interests_max_id = session.execute(f"select max(interestsId) from interests").fetchall()
+                    for i in interests_max_id:
+                        interests_id = i[0]
+
                     interests_keywords_data = interests_dict["keywords"]
-                    interests_keywords_dict["resumeId"] = resumeId
-                    interests_keywords_dict["interestsId"] = "1"
+                    interests_keywords_dict["interestsId"] = interests_id
                     for ikd in interests_keywords_data:
                         interests_keywords_dict["value"] = ikd
                         interests_keywords_query = interests_keywords.insert()
                         session.execute(interests_keywords_query,**interests_keywords_dict)
-                    interests_id = interests_id + 1
+   
                 
                 # --------- SECTION : REFERENCES --------- #
                 try:
@@ -240,17 +243,18 @@ async def resume_insertion(resume):
                 projects_keywords_dict = {}
                 projects_highlights_dict = {}
                 projects_roles_dict = {}
-                projects_id = 1
                 projects_dict["resumeId"] = resumeId
-                projects_dict["id"] = projects_id
                 for i in projects_data:
                     for n in i:
                         projects_dict[n] = i[n]
                     projects_query = projects.insert()
                     session.execute(projects_query, **projects_dict)
 
+                    projects_max_id = session.execute(f"select max(projectsId) from projects").fetchall()
+                    for i in projects_max_id:
+                        projects_id = i[0]
+
                     projects_highlights_data = projects_dict["highlights"]
-                    projects_highlights_dict["resumeId"] = resumeId
                     projects_highlights_dict["projectsId"] = projects_id
                     for phd in projects_highlights_data:
                         projects_highlights_dict["value"] = phd
@@ -258,7 +262,6 @@ async def resume_insertion(resume):
                         session.execute(projects_highlights_query,**projects_highlights_dict)
 
                     projects_keywords_data = projects_dict["keywords"]
-                    projects_keywords_dict["resumeId"] = resumeId
                     projects_keywords_dict["projectsId"] = projects_id
                     for pkd in projects_keywords_data:
                         projects_keywords_dict["value"] = pkd
@@ -266,7 +269,6 @@ async def resume_insertion(resume):
                         session.execute(projects_keywords_query,**projects_keywords_dict)
 
                     projects_roles_data = projects_dict["roles"]
-                    projects_roles_dict["resumeId"] = resumeId
                     projects_roles_dict["projectsId"] = projects_id
                     for prd in projects_roles_data:
                         projects_roles_dict["value"] = prd
@@ -358,12 +360,12 @@ async def fetch_all_resume():
                     "highlights":[
                         wh["value"]
                         for wh in work_highlights_results
-                        if wh["resumeId"] == i["id"] and wh["workId"] == w["id"]
+                        if wh["workId"] == w["workId"]
                     ],
                     "keywords":[
                         wk["value"]
                         for wk in work_keywords_results
-                        if wk["resumeId"] == i["id"] and wk["workId"] == w["id"]
+                        if wk["workId"] == w["workId"]
                     ]
                 }
                 for w in work_results
@@ -380,7 +382,7 @@ async def fetch_all_resume():
                     "highlights":[
                         vh["value"]
                         for vh in volunteer_highlights_results
-                        if vh["resumeId"] == i["id"] and vh["volunteerId"] == v["id"]
+                        if vh["volunteerId"] == v["volunteerId"]
                     ]
                 }
                 for v in volunteer_results
@@ -398,7 +400,7 @@ async def fetch_all_resume():
                     "courses":[
                         ec["value"]
                         for ec in education_courses_results
-                        if ec["resumeId"] == i["id"] and ec["educationId"] == e["id"]
+                        if ec["educationId"] == e["educationId"]
                     ]
                 }
                 for e in education_results
@@ -442,7 +444,7 @@ async def fetch_all_resume():
                     "keywords":[
                         sk["value"]
                         for sk in skills_keywords_results
-                        if sk["resumeId"] == i["id"] and sk["skillsId"] == s["id"]
+                        if sk["skillsId"] == s["skillsId"]
                     ]
                 }
                 for s in skills_results
@@ -462,7 +464,7 @@ async def fetch_all_resume():
                     "keywords":[
                         ik["value"]
                         for ik in interests_keywords_results
-                        if ik["resumeId"] == i["id"] and ik["interestsId"] == intre["id"]
+                        if ik["interestsId"] == intre["interestsId"]
                     ]
                 }
                 for intre in interests_results
@@ -483,12 +485,12 @@ async def fetch_all_resume():
                     "highlights":[
                         prh["value"]
                         for prh in projects_highlights_results
-                        if prh["resumeId"] == i["id"] and prh["projectsId"] == pr["id"]
+                        if prh["projectsId"] == pr["projectsId"]
                     ],
                     "keywords":[
                         prk["value"]
                         for prk in projects_keywords_results
-                        if prk["resumeId"] == i["id"] and prk["projectsId"] == pr["id"]
+                        if prk["projectsId"] == pr["projectsId"]
                     ],
                     "startDate":pr["startDate"],
                     "endDate":pr["endDate"],
@@ -496,7 +498,7 @@ async def fetch_all_resume():
                     "roles":[
                         prro["value"]
                         for prro in projects_roles_results
-                        if prro["resumeId"] == i["id"] and prro["projectsId"] == pr["id"]
+                        if prro["projectsId"] == pr["projectsId"]
                     ],
                     "entity":pr["entity"],
                     "type":pr["type"]

@@ -1,11 +1,12 @@
+from typing import Type
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, ForeignKey, Text, insert
+from sqlalchemy import Column, Integer, ForeignKey, Text
+from sqlalchemy.sql import delete,insert,update
 from sqlalchemy.orm import declarative_base
 
 engine = create_engine(
     'mysql+mysqlconnector://root:password@localhost/resumedata', connect_args={'auth_plugin': 'mysql_native_password'} 
     )
-
 connect_engine = engine.connect()
 table_base = declarative_base()
 
@@ -18,18 +19,14 @@ class basics_information(table_base):
     image = Column(Text)
     email = Column(Text)
     phone = Column(Text)
-    url = Column(Text)
-    summary = Column(Text)
-
-class basics_location(table_base):
-    __tablename__ = 'basics_location'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    resumeId = Column(Integer, ForeignKey('basics_information.id'), nullable=False)
     address = Column(Text)
     postalCode = Column(Text)
     city = Column(Text)
     countryCode = Column(Text)
     region = Column(Text)
+    url = Column(Text)
+    summary = Column(Text)
+    
 
 class basics_profiles(table_base):
     __tablename__ = 'basics_profiles'
@@ -51,18 +48,20 @@ class work(table_base):
     startDate = Column(Text)
     endDate = Column( Text)
     summary = Column(Text)
+    highlights = Column(Text)
+    keywords = Column(Text)
 
-class work_highlights(table_base):
-    __tablename__ = 'work_highlights'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    workId = Column(Integer, ForeignKey("work.workId"), nullable=False)
-    value = Column(Text)
+# class work_highlights(table_base):
+#     __tablename__ = 'work_highlights'
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     workId = Column(Integer, ForeignKey("work.workId"), nullable=False)
+#     value = Column(Text)
 
-class work_keywords(table_base):
-    __tablename__ = 'work_keywords'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    workId = Column(Integer, ForeignKey("work.workId"), nullable=False)
-    value = Column(Text)
+# class work_keywords(table_base):
+#     __tablename__ = 'work_keywords'
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     workId = Column(Integer, ForeignKey("work.workId"), nullable=False)
+#     value = Column(Text)
 
 class volunteer(table_base):
     __tablename__ = 'volunteer'
@@ -74,12 +73,13 @@ class volunteer(table_base):
     startDate = Column(Text)
     endDate = Column(Text)
     summary = Column(Text)
+    highlights = Column(Text)
 
-class volunteer_highlights(table_base):
-    __tablename__ = 'volunteer_highlights'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    volunteerId = Column(Integer,ForeignKey("volunteer.volunteerId"), nullable=False)
-    value = Column(Text)
+# class volunteer_highlights(table_base):
+#     __tablename__ = 'volunteer_highlights'
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     volunteerId = Column(Integer,ForeignKey("volunteer.volunteerId"), nullable=False)
+#     value = Column(Text)
 
 class education(table_base):
     __tablename__ = 'education'
@@ -133,12 +133,13 @@ class skills(table_base):
     skillsId = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text)
     level = Column(Text)
+    keywords = Column(Text)
 
-class skills_keywords(table_base):
-    __tablename__ = 'skills_keywords'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    skillsId = Column(Integer, ForeignKey("skills.skillsId"), nullable=False)
-    value = Column(Text)
+# class skills_keywords(table_base):
+#     __tablename__ = 'skills_keywords'
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     skillsId = Column(Integer, ForeignKey("skills.skillsId"), nullable=False)
+#     value = Column(Text)
 
 class languages(table_base):
     __tablename__ = 'languages'
@@ -152,12 +153,13 @@ class interests(table_base):
     resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
     interestsId = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text)
+    keywords = Column(Text)
 
-class interests_keywords(table_base):
-    __tablename__ = 'interests_keywords'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    interestsId = Column(Integer, ForeignKey("interests.interestsId"), nullable=False)
-    value = Column(Text)
+# class interests_keywords(table_base):
+#     __tablename__ = 'interests_keywords'
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     interestsId = Column(Integer, ForeignKey("interests.interestsId"), nullable=False)
+#     value = Column(Text)
 
 class references(table_base):
     __tablename__ = 'references'
@@ -177,28 +179,27 @@ class projects(table_base):
     url = Column(Text)
     entity = Column(Text)
     type = Column(Text)
+    highlights = Column(Text)
+    keywords = Column(Text)
+    roles = Column(Text)
 
-class projects_highlights(table_base):
-    __tablename__ = 'projects_highlights'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
-    value = Column(Text)
+# class projects_highlights(table_base):
+#     __tablename__ = 'projects_highlights'
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
+#     value = Column(Text)
 
-class projects_keywords(table_base):
-    __tablename__ = 'projects_keywords'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
-    value = Column(Text)
+# class projects_keywords(table_base):
+#     __tablename__ = 'projects_keywords'
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
+#     value = Column(Text)
 
-class projects_roles(table_base):
-    __tablename__ = 'projects_roles'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
-    value = Column(Text)
+# class projects_roles(table_base):
+#     __tablename__ = 'projects_roles'
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
+#     value = Column(Text)
 
 
 table_base.metadata.create_all(engine)
-
-
-
-

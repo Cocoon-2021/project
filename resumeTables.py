@@ -1,7 +1,6 @@
 from typing import Type
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, ForeignKey, Text
-from sqlalchemy.sql import delete,insert,update
 from sqlalchemy.orm import declarative_base
 
 engine = create_engine(
@@ -51,18 +50,6 @@ class work(table_base):
     highlights = Column(Text)
     keywords = Column(Text)
 
-# class work_highlights(table_base):
-#     __tablename__ = 'work_highlights'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     workId = Column(Integer, ForeignKey("work.workId"), nullable=False)
-#     value = Column(Text)
-
-# class work_keywords(table_base):
-#     __tablename__ = 'work_keywords'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     workId = Column(Integer, ForeignKey("work.workId"), nullable=False)
-#     value = Column(Text)
-
 class volunteer(table_base):
     __tablename__ = 'volunteer'
     resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
@@ -74,12 +61,6 @@ class volunteer(table_base):
     endDate = Column(Text)
     summary = Column(Text)
     highlights = Column(Text)
-
-# class volunteer_highlights(table_base):
-#     __tablename__ = 'volunteer_highlights'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     volunteerId = Column(Integer,ForeignKey("volunteer.volunteerId"), nullable=False)
-#     value = Column(Text)
 
 class education(table_base):
     __tablename__ = 'education'
@@ -135,12 +116,6 @@ class skills(table_base):
     level = Column(Text)
     keywords = Column(Text)
 
-# class skills_keywords(table_base):
-#     __tablename__ = 'skills_keywords'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     skillsId = Column(Integer, ForeignKey("skills.skillsId"), nullable=False)
-#     value = Column(Text)
-
 class languages(table_base):
     __tablename__ = 'languages'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -154,12 +129,6 @@ class interests(table_base):
     interestsId = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text)
     keywords = Column(Text)
-
-# class interests_keywords(table_base):
-#     __tablename__ = 'interests_keywords'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     interestsId = Column(Integer, ForeignKey("interests.interestsId"), nullable=False)
-#     value = Column(Text)
 
 class references(table_base):
     __tablename__ = 'references'
@@ -183,23 +152,6 @@ class projects(table_base):
     keywords = Column(Text)
     roles = Column(Text)
 
-# class projects_highlights(table_base):
-#     __tablename__ = 'projects_highlights'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
-#     value = Column(Text)
-
-# class projects_keywords(table_base):
-#     __tablename__ = 'projects_keywords'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
-#     value = Column(Text)
-
-# class projects_roles(table_base):
-#     __tablename__ = 'projects_roles'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
-#     value = Column(Text)
 
 
 table_base.metadata.create_all(engine)

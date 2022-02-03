@@ -29,7 +29,7 @@ class basics_information(table_base):
 
 class basics_profiles(table_base):
     __tablename__ = 'basics_profiles'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    profileId = Column(Integer, primary_key=True, autoincrement=True)
     resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
     network = Column(Text)
     username= Column(Text)
@@ -76,13 +76,13 @@ class education(table_base):
 
 class education_courses(table_base):
     __tablename__ = 'education_courses'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    coursesId = Column(Integer, primary_key=True, autoincrement=True)
     educationId = Column(Integer, ForeignKey("education.educationId"), nullable=False)
     value = Column(Text)
 
 class awards(table_base):
     __tablename__ = 'awards'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    awardsId = Column(Integer, primary_key=True, autoincrement=True)
     resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
     title = Column(Text)
     date = Column(Text)
@@ -91,7 +91,7 @@ class awards(table_base):
 
 class certificates(table_base):
     __tablename__ = 'certificates'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    certificatesId = Column(Integer, primary_key=True, autoincrement=True)
     resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
     name = Column(Text)
     date = Column(Text)
@@ -100,7 +100,7 @@ class certificates(table_base):
 
 class publications(table_base):
     __tablename__ = 'publications'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    publicationsId = Column(Integer, primary_key=True, autoincrement=True)
     resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
     name = Column(Text)
     publisher = Column(Text)
@@ -118,7 +118,7 @@ class skills(table_base):
 
 class languages(table_base):
     __tablename__ = 'languages'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    languagesId = Column(Integer, primary_key=True, autoincrement=True)
     resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
     language = Column(Text)
     fluency = Column(Text)
@@ -132,7 +132,7 @@ class interests(table_base):
 
 class references(table_base):
     __tablename__ = 'references'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    referenecesId = Column(Integer, primary_key=True, autoincrement=True)
     resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
     name = Column(Text)
     reference = Column(Text)

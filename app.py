@@ -1,5 +1,5 @@
 
-from resumeTables import *
+from resume_tables import *
 from resume_deletion import resume_deletion
 from resume_update import resume_edit_and_update
 from resume_list import list_all_resume
@@ -277,7 +277,7 @@ async def resume_insertion(resume):
                                     if n == "roles":
                                         projects_roles = i[n]
                     projects_roles_data = ",".join(projects_roles)
-                    projects_dict["keywords"] = projects_roles_data
+                    projects_dict["roles"] = projects_roles_data
 
                     projects_query = insert(projects).values(**projects_dict)
                     session.execute(projects_query)

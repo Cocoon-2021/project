@@ -1,4 +1,4 @@
-from resumeTables import *
+from resume_tables import *
 from sqlalchemy.sql import select
 from starlette.responses import JSONResponse
 

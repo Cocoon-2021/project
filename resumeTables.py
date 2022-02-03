@@ -1,186 +1,203 @@
-from typing import Tuple
 from sqlalchemy import create_engine
-from sqlalchemy import Table, Column, Integer, MetaData, ForeignKey, Text
+from sqlalchemy import Column, Integer, ForeignKey, Text
+from sqlalchemy.orm import declarative_base
 
 engine = create_engine(
     'mysql+mysqlconnector://root:password@localhost/resumedata', connect_args={'auth_plugin': 'mysql_native_password'} 
     )
+
 connect_engine = engine.connect()
+table_base = declarative_base()
 
-resume_metadata = MetaData()
-basics_information = Table('basics_information', resume_metadata,
-    Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('coverLetter', Text),
-    Column('name', Text),
-    Column('label', Text),
-    Column('image', Text),
-    Column('email', Text),
-    Column('phone', Text),
-    Column('url', Text),
-    Column('summary', Text),
-    )
+class basics_information(table_base):
+    __tablename__ = 'basics_information'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    coverLetter = Column(Text)
+    name = Column(Text)
+    label = Column(Text)
+    image = Column(Text)
+    email = Column(Text)
+    phone = Column(Text)
+    url = Column(Text)
+    summary = Column(Text)
 
-basics_location = Table('basics_location', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('address', Text),
-    Column('postalCode', Text),
-    Column('city', Text),
-    Column('countryCode', Text),
-    Column('region', Text)
-    )
+class basics_location(table_base):
+    __tablename__ = 'basics_location'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    resumeId = Column(Integer, ForeignKey('basics_information.id'), nullable=False)
+    address = Column(Text)
+    postalCode = Column(Text)
+    city = Column(Text)
+    countryCode = Column(Text)
+    region = Column(Text)
 
-basics_profiles = Table('basics_profiles', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('network', Text),
-    Column('username', Text),
-    Column('url', Text)
-    )
+class basics_profiles(table_base):
+    __tablename__ = 'basics_profiles'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    network = Column(Text)
+    username= Column(Text)
+    url = Column(Text)
+    
+class work(table_base):
+    __tablename__ = 'work'
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    workId = Column(Integer, primary_key=True, nullable=False)
+    name = Column(Text)
+    location = Column(Text)
+    description = Column(Text)
+    position = Column(Text)
+    url = Column(Text)
+    startDate = Column(Text)
+    endDate = Column( Text)
+    summary = Column(Text)
 
-work = Table('work', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('workId', Integer, nullable=False, primary_key=True, autoincrement=True),
-    Column('name', Text),
-    Column('location', Text),
-    Column('description', Text),
-    Column('position', Text),
-    Column('url', Text),
-    Column('startDate', Text),
-    Column('endDate', Text),
-    Column('summary', Text)
-    )
+class work_highlights(table_base):
+    __tablename__ = 'work_highlights'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    workId = Column(Integer, ForeignKey("work.workId"), nullable=False)
+    value = Column(Text)
 
-work_highlights = Table('work_highlights', resume_metadata,
-    Column('workId', Integer, ForeignKey("work.workId"), nullable=False),
-    Column('value', Text)
-    )
+class work_keywords(table_base):
+    __tablename__ = 'work_keywords'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    workId = Column(Integer, ForeignKey("work.workId"), nullable=False)
+    value = Column(Text)
 
-work_keywords = Table('work_keywords', resume_metadata,
-    Column('workId', Integer, ForeignKey("work.workId"), nullable=False),
-    Column('value', Text)
-    )
+class volunteer(table_base):
+    __tablename__ = 'volunteer'
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    volunteerId = Column(Integer,primary_key=True, nullable=False)
+    organization = Column(Text)
+    position = Column(Text)
+    url = Column(Text)
+    startDate = Column(Text)
+    endDate = Column(Text)
+    summary = Column(Text)
 
-volunteer = Table('volunteer', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('volunteerId', Integer,primary_key=True,autoincrement=True, nullable=False),
-    Column('organization', Text),
-    Column('position', Text),
-    Column('url', Text),
-    Column('startDate', Text),
-    Column('endDate', Text),
-    Column('summary', Text)
-    )
+class volunteer_highlights(table_base):
+    __tablename__ = 'volunteer_highlights'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    volunteerId = Column(Integer,ForeignKey("volunteer.volunteerId"), nullable=False)
+    value = Column(Text)
 
-volunteer_highlights = Table('volunteer_highlights', resume_metadata,
-    Column('volunteerId', Integer, ForeignKey("volunteer.volunteerId"), nullable=False),
-    Column('value', Text)
-    )
+class education(table_base):
+    __tablename__ = 'education'
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    educationId = Column(Integer,primary_key=True, nullable=False)
+    institution = Column(Text)
+    url = Column(Text)
+    area = Column(Text)
+    studyType = Column(Text)
+    startDate = Column(Text)
+    endDate = Column(Text)
+    score = Column(Text)
 
-education = Table('education', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('educationId', Integer, primary_key=True,autoincrement=True, nullable=False),
-    Column('institution', Text),
-    Column('url', Text),
-    Column('area', Text),
-    Column('studyType', Text),
-    Column('startDate', Text),
-    Column('endDate', Text),
-    Column('score', Text)
-    )
+class education_courses(table_base):
+    __tablename__ = 'education_courses'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    educationId = Column(Integer, ForeignKey("education.educationId"), nullable=False)
+    value = Column(Text)
 
-education_courses = Table('education_courses', resume_metadata,
-    Column('educationId', Integer,ForeignKey("education.educationId"), nullable=False),
-    Column('value', Text)
-    )
+class awards(table_base):
+    __tablename__ = 'awards'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    title = Column(Text)
+    date = Column(Text)
+    awarder = Column(Text)
+    summary = Column(Text)
 
-awards = Table('awards', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('title', Text),
-    Column('date', Text),
-    Column('awarder', Text),
-    Column('summary', Text)
-    )
+class certificates(table_base):
+    __tablename__ = 'certificates'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    name = Column(Text)
+    date = Column(Text)
+    url = Column(Text)
+    issuer = Column(Text)
 
-certificates = Table('certificates', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('name', Text),
-    Column('date', Text),
-    Column('url', Text),
-    Column('issuer', Text)
-    )
+class publications(table_base):
+    __tablename__ = 'publications'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    name = Column(Text)
+    publisher = Column(Text)
+    releaseDate = Column(Text)
+    url = Column(Text)
+    summary = Column(Text)
 
-publications = Table('publications', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('name', Text),
-    Column('publisher', Text),
-    Column('releaseDate', Text),
-    Column('url', Text),
-    Column('summary', Text)
-    )
+class skills(table_base):
+    __tablename__ = 'skills'
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    skillsId = Column(Integer, primary_key=True, nullable=False)
+    name = Column(Text)
+    level = Column(Text)
 
-skills = Table('skills', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('skillsId', Integer,primary_key=True, autoincrement=True, nullable=False),
-    Column('name', Text),
-    Column('level', Text)
-    )
+class skills_keywords(table_base):
+    __tablename__ = 'skills_keywords'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    skillsId = Column(Integer, ForeignKey("skills.skillsId"), nullable=False)
+    value = Column(Text)
 
-skills_keywords = Table('skills_keywords', resume_metadata,
-    Column('skillsId', Integer, ForeignKey("skills.skillsId"), nullable=False),
-    Column('value', Text)
-    )
+class languages(table_base):
+    __tablename__ = 'languages'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    language = Column(Text)
+    fluency = Column(Text)
 
-languages = Table('languages', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('language', Text),
-    Column('fluency', Text)
-    )
+class interests(table_base):
+    __tablename__ = 'interests'
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    interestsId = Column(Integer, primary_key=True, nullable=False)
+    name = Column(Text)
 
-interests = Table('interests', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('interestsId', Integer, primary_key=True, autoincrement=True, nullable=False),
-    Column('name', Text)
-    )
+class interests_keywords(table_base):
+    __tablename__ = 'interests_keywords'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    interestsId = Column(Integer, ForeignKey("interests.interestsId"), nullable=False)
+    value = Column(Text)
 
-interests_keywords = Table('interests_keywords', resume_metadata,
-    Column('interestsId', Integer, ForeignKey("interests.interestsId"), nullable=False),
-    Column('value', Text)
-    )
+class references(table_base):
+    __tablename__ = 'references'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    name = Column(Text)
+    reference = Column(Text)
 
-references = Table('references', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('name', Text),
-    Column('reference', Text)
-    )
+class projects(table_base):
+    __tablename__ = 'projects'
+    resumeId = Column(Integer, ForeignKey("basics_information.id"), nullable=False)
+    projectsId = Column(Integer, primary_key=True, nullable=False)
+    name= Column(Text)
+    description = Column(Text)
+    startDate = Column(Text)
+    endDate = Column(Text)
+    url = Column(Text)
+    entity = Column(Text)
+    type = Column(Text)
 
-projects = Table('projects', resume_metadata,
-    Column('resumeId', Integer, ForeignKey("basics_information.id"), nullable=False),
-    Column('projectsId', Integer, primary_key=True, autoincrement=True, nullable=False),
-    Column('name', Text),
-    Column('description', Text),
-    Column('startDate', Text),
-    Column('endDate', Text),
-    Column('url', Text),
-    Column('entity', Text),
-    Column('type', Text),
-    )
+class projects_highlights(table_base):
+    __tablename__ = 'projects_highlights'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
+    value = Column(Text)
 
-projects_highlights = Table('projects_highlights', resume_metadata,
-    Column('projectsId', Integer, ForeignKey("projects.projectsId"), nullable=False),
-    Column('value', Text)
-    )
+class projects_keywords(table_base):
+    __tablename__ = 'projects_keywords'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
+    value = Column(Text)
 
-projects_keywords = Table('projects_keywords', resume_metadata,
-    Column('projectsId', Integer, ForeignKey("projects.projectsId"), nullable=False),
-    Column('value', Text)
-    )
-
-projects_roles = Table('projects_roles', resume_metadata,
-    Column('projectsId', Integer, ForeignKey("projects.projectsId"), nullable=False),
-    Column('value', Text)
-    )
+class projects_roles(table_base):
+    __tablename__ = 'projects_roles'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    projectsId = Column(Integer, ForeignKey("projects.projectsId"), nullable=False)
+    value = Column(Text)
 
 
-resume_metadata.create_all(engine)
+table_base.metadata.create_all(engine)
 
 
 

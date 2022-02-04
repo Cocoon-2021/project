@@ -319,9 +319,9 @@ async def requested_resume(request):
 
 
 async def resumes_fetch(request):
-    jsonout = await list_all_resume()
+    resumes_list = await list_all_resume()
 
-    return JSONResponse(jsonout)
+    return JSONResponse(resumes_list)
 
 
 async def resume_validate_and_insert(request):

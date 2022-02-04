@@ -3,7 +3,6 @@ from sqlalchemy.sql import select
 from starlette.responses import JSONResponse
 
 
-
 async def list_all_resume():
 
     basics_query = select(basics_information)
@@ -178,7 +177,7 @@ async def list_all_resume():
             "projects": [
                 {
                     "name": pr.name,
-                    "description":pr.description,
+                    "description": pr.description,
                     "highlights": pr.highlights,
                     "keywords": pr.keywords,
                     "startDate": pr.startDate,

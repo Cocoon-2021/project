@@ -3,10 +3,13 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, ForeignKey, Text
 from sqlalchemy.orm import declarative_base
 
+# --------- Engine creation ---------- #
 engine = create_engine(
     'mysql+mysqlconnector://root:password@localhost/resumedata', connect_args={'auth_plugin': 'mysql_native_password'} 
     )
 connect_engine = engine.connect()
+# ------------------------------------- #
+
 table_base = declarative_base()
 
 class basics_information(table_base):

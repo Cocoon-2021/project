@@ -14,8 +14,8 @@ import json
 with open('validationSchema.json') as sc:
     schema = json.load(sc)
 
-# ------------------- RESUME INSERTION --------------------------- #
 
+# ------------------- RESUME INSERTION --------------------------- #
 
 async def resume_insertion(resume):
     with connect_engine.connect() as session:
@@ -115,25 +115,18 @@ async def resume_insertion(resume):
                     for n in i:
                         if n != "courses":
                             education_dict[n] = i[n]
-                    education_query = insert(
-                        education).values(**education_dict)
-                    session.execute(education_query)
-
-                    education_max_id = session.execute(
-                        f"select max(educationId) from education").fetchall()
-                    for i in education_max_id:
-                        education_id = i[0]
-
+                    
                     for i in education_data:
                         for n in i:
                             if n == "courses":
-                                education_courses_data = i[n]
-                    education_courses_dict["educationId"] = education_id
-                    for ecd in education_courses_data:
-                        education_courses_dict["value"] = ecd
-                        education_courses_query = insert(
-                            education_courses).values(**education_courses_dict)
-                        session.execute(education_courses_query)
+                                education_courses = i[n]
+                    education_courses_data = ",".join(education_courses)
+                    education_dict["courses"] = education_courses_data
+
+                    education_query = insert(
+                        education).values(**education_dict)
+                    session.execute(education_query)
+    
 
                 # --------- SECTION : AWARDS ---------- #
                 try:
@@ -177,7 +170,7 @@ async def resume_insertion(resume):
                 except:
                     print("Publications Data Missing")
 
-                # --------- SECTION : SKILLS --------- #
+                # --------- SECTION : SKILLS ------------ #
                 skills_data = resume["skills"]
                 skills_dict = {}
                 skills_dict["resumeId"] = resumeId
@@ -297,7 +290,7 @@ async def resume_insertion(resume):
 # -------------- GET PARAMETERED RESUME ------------------------ #
 
 
-async def requested_resume(request):
+async def requested_resume(request): # -- function to get requested resume
     user_requested_id = request.path_params['pid']
     resumes = await list_all_resume()
     for i in resumes:
@@ -318,13 +311,13 @@ async def requested_resume(request):
 # --------------------------------------------------------------- #
 
 
-async def resumes_fetch(request):
+async def resumes_fetch(request): # function to call list of resumes
     resumes_list = await list_all_resume()
 
     return JSONResponse(resumes_list)
 
 
-async def resume_validate_and_insert(request):
+async def resume_validate_and_insert(request): # -- function for validation verification and calling insertion
     # -----  VALIDATION  ----- #
     resume = await request.json()
     validator = Draft7Validator(schema)
@@ -336,7 +329,7 @@ async def resume_validate_and_insert(request):
     return JSONResponse(resumeId)
 
 
-app = Starlette(debug=True,  routes=[
+app = Starlette(debug=True,  routes=[ # -- list of all routes
     Route('/resume', resumes_fetch, methods=['GET']),
     Route('/', resume_validate_and_insert, methods=['POST']),
     Route('/resume/{pid:int}', requested_resume, methods=['GET']),

@@ -2,7 +2,7 @@
 from resume_tables import *
 from resume_deletion import resume_deletion
 from resume_update import resume_edit_and_update
-from resume_list import list_all_resume
+from resume_list import list_all_resume,requested_resume
 from sqlalchemy import schema
 from sqlalchemy.sql import insert
 from starlette.applications import Starlette
@@ -290,23 +290,6 @@ async def resume_insertion(resume):
 # -------------- GET PARAMETERED RESUME ------------------------ #
 
 
-async def requested_resume(request): # -- function to get requested resume
-    user_requested_id = request.path_params['pid']
-    resumes = await list_all_resume()
-    for i in resumes:
-        if i["id"] == user_requested_id:
-            passed_resume = dict(
-                [
-                    (key, value)
-                    for key, value in i.items()
-                    if value != []
-                ]
-            )
-            break
-        else:
-            passed_resume = "empty"
-
-    return JSONResponse(passed_resume)
 
 # --------------------------------------------------------------- #
 

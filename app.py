@@ -1,5 +1,6 @@
 
 from resume_tables import *
+from database_engine import connect_engine
 from resume_deletion import resume_deletion
 from resume_update import resume_edit_and_update
 from resume_list import list_all_resume,requested_resume
@@ -287,19 +288,6 @@ async def resume_insertion(resume):
     return resumeId
 
 
-# -------------- GET PARAMETERED RESUME ------------------------ #
-
-
-
-# --------------------------------------------------------------- #
-
-
-async def resumes_fetch(request): # function to call list of resumes
-    resumes_list = await list_all_resume()
-
-    return JSONResponse(resumes_list)
-
-
 async def resume_validate_and_insert(request): # -- function for validation verification and calling insertion
     # -----  VALIDATION  ----- #
     resume = await request.json()
@@ -313,7 +301,7 @@ async def resume_validate_and_insert(request): # -- function for validation veri
 
 
 app = Starlette(debug=True,  routes=[ # -- list of all routes
-    Route('/resume', resumes_fetch, methods=['GET']),
+    Route('/resume', list_all_resume, methods=['GET']),
     Route('/', resume_validate_and_insert, methods=['POST']),
     Route('/resume/{pid:int}', requested_resume, methods=['GET']),
     Route('/resume/{pid:int}', resume_edit_and_update, methods=['PUT']),

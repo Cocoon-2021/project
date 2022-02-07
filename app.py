@@ -116,17 +116,35 @@ async def resume_insertion(resume):
                     for n in i:
                         if n != "courses":
                             education_dict[n] = i[n]
-                    
-                    for i in education_data:
-                        for n in i:
-                            if n == "courses":
-                                education_courses = i[n]
-                    education_courses_data = ",".join(education_courses)
-                    education_dict["courses"] = education_courses_data
-
-                    education_query = insert(
-                        education).values(**education_dict)
+                        elif n == "courses":
+                            education_courses_data = i[n]
+                    print(education_dict)
+                    print(education_courses_dict)
+                    education_query = insert(education).values(**education_dict)
                     session.execute(education_query)
+
+                    education_max_id = session.execute(f"select max(educationId) from education").fetchall()
+
+                    for n in education_max_id:
+                        education_id = n[0]
+                        print(education_id)
+                    for m in education_courses_data: 
+                        education_courses_dict["value"] = m
+                        education_courses_dict["educationId"] = education_id
+                        education_courses_query = insert(education_courses).values(**education_courses_dict)
+                        session.execute(education_courses_query)
+                    
+
+                
+                    # for n in i:
+                    #     if n == "courses":
+                    #         education_courses_data = i[n]
+                    #     print(education_courses_data)
+                    # education_courses_dict["educationId"] = education_id
+                        # for ecd in education_courses_data:
+                        #     education_courses_dict["value"] = ecd
+                        #     print(education_courses_dict)
+                        #     
     
 
                 # --------- SECTION : AWARDS ---------- #

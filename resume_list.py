@@ -1,6 +1,5 @@
 from database_engine import connect_engine
 from resume_tables import *
-from sqlalchemy.sql import select
 from starlette.responses import JSONResponse
 import json
 
@@ -8,11 +7,11 @@ import json
 async def list_all_resume(request): # --- function get list of resumes
 
     resume_list = []
-    fetch_resumes_query = f"""select 
+    fetch_resumes_query = """select 
                                 json_object("id",basics_information.id,"coverLetter",basics_information.coverLetter,"basics",json_object("name",basics_information.name,"label",basics_information.label,"image",basics_information.image,"email",basics_information.email,"phone",basics_information.phone,"location",json_object("address",basics_information.address,"postalCode",basics_information.postalCode,"city",basics_information.city,"countryCode",basics_information.countryCode,"region",basics_information.region),"profiles",(select json_arrayagg(json_object("network", basics_profiles.network, "username", basics_profiles.username, "url", basics_profiles.url)) from basics_profiles where basics_profiles.resumeId = basics_information.id)),
                                 "work",(select json_arrayagg(json_object("name", work.name, "location", work.location, "description", work.description, "position", work.position,"url", work.url, "startDate", work.startDate, "endDate", work.endDate, "summary", work.summary, "highlights", work.highlights, "keywords", work.keywords)) from work where basics_information.id = work.resumeId),
                                 "volunteer",(select json_arrayagg(json_object("organization", volunteer.organization, "position", volunteer.position,"url", volunteer.url, "startDate", volunteer.startDate, "endDate", volunteer.endDate, "highlights", volunteer.highlights))from volunteer where basics_information.id = volunteer.resumeId),
-                                "education",(select json_arrayagg(json_object("institution", education.institution, "url", education.url, "area", education.area,"studyType", education.studyType, "startDate", education.startDate, "endDate", education.endDate, "score", education.score)) from education where basics_information.id = education.resumeId),
+                                "education",(select json_arrayagg(json_object("institution", education.institution, "url", education.url, "area", education.area,"studyType", education.studyType, "startDate", education.startDate, "endDate", education.endDate, "score", education.score,"courses",(select json_arrayagg(education_courses.value) from education_courses where education.educationId = education_courses.educationId))) from education where basics_information.id = education.resumeId),
                                 "awards",(select json_arrayagg(json_object("title", awards.title, "date", awards.date, "awarder", awards.awarder, "summary", awards.summary)) from awards where basics_information.id = awards.resumeId),
                                 "certificates",(select json_arrayagg(json_object("name", certificates.name, "date", certificates.date, "url", certificates.url, "issuer", certificates.issuer)) from certificates where basics_information.id = certificates.resumeId),
                                 "publications",(select json_arrayagg(json_object("name", publications.name, "publisher", publications.publisher,"releaseDate", publications.releaseDate, "url", publications.url, "summary", publications.summary)) from publications where basics_information.id = publications.resumeId),
@@ -25,6 +24,7 @@ async def list_all_resume(request): # --- function get list of resumes
                                                                         left join work on basics_information.id = work.resumeId
                                                                         left join volunteer on basics_information.id = volunteer.resumeId
                                                                         left join education on basics_information.id = education.resumeId
+                                                                        left join education_courses on education_courses.educationId = education.educationId
                                                                         left join awards on basics_information.id = awards.resumeId
                                                                         left join certificates on basics_information.id = awards.resumeId
                                                                         left join publications on basics_information.id = publications.resumeId
@@ -37,6 +37,11 @@ async def list_all_resume(request): # --- function get list of resumes
 
     for i in fetch_resumes_result:
         resume_list.append(json.loads(i.resume))
+    
+    if resume_list:
+        print(" ------- passing resumes ------- ")
+    else:
+        print(" ------- nothing to pass ------- ")
         
         
 
@@ -117,7 +122,7 @@ async def requested_resume(request): # --- function to get requested resume
                                 json_object("id",basics_information.id,"coverLetter",basics_information.coverLetter,"basics",json_object("name",basics_information.name,"label",basics_information.label,"image",basics_information.image,"email",basics_information.email,"phone",basics_information.phone,"location",json_object("address",basics_information.address,"postalCode",basics_information.postalCode,"city",basics_information.city,"countryCode",basics_information.countryCode,"region",basics_information.region),"profiles",(select json_arrayagg(json_object("network", basics_profiles.network, "username", basics_profiles.username, "url", basics_profiles.url)) from basics_profiles where basics_profiles.resumeId = basics_information.id)),
                                 "work",(select json_arrayagg(json_object("name", work.name, "location", work.location, "description", work.description, "position", work.position,"url", work.url, "startDate", work.startDate, "endDate", work.endDate, "summary", work.summary, "highlights", work.highlights, "keywords", work.keywords)) from work where basics_information.id = work.resumeId),
                                 "volunteer",(select json_arrayagg(json_object("organization", volunteer.organization, "position", volunteer.position,"url", volunteer.url, "startDate", volunteer.startDate, "endDate", volunteer.endDate, "highlights", volunteer.highlights))from volunteer where basics_information.id = volunteer.resumeId),
-                                "education",(select json_arrayagg(json_object("institution", education.institution, "url", education.url, "area", education.area,"studyType", education.studyType, "startDate", education.startDate, "endDate", education.endDate, "score", education.score)) from education where basics_information.id = education.resumeId),
+                                "education",(select json_arrayagg(json_object("institution", education.institution, "url", education.url, "area", education.area,"studyType", education.studyType, "startDate", education.startDate, "endDate", education.endDate, "score", education.score,"courses",(select json_arrayagg(education_courses.value) from education_courses where education.educationId = education_courses.educationId))) from education where basics_information.id = education.resumeId),
                                 "awards",(select json_arrayagg(json_object("title", awards.title, "date", awards.date, "awarder", awards.awarder, "summary", awards.summary)) from awards where basics_information.id = awards.resumeId),
                                 "certificates",(select json_arrayagg(json_object("name", certificates.name, "date", certificates.date, "url", certificates.url, "issuer", certificates.issuer)) from certificates where basics_information.id = certificates.resumeId),
                                 "publications",(select json_arrayagg(json_object("name", publications.name, "publisher", publications.publisher,"releaseDate", publications.releaseDate, "url", publications.url, "summary", publications.summary)) from publications where basics_information.id = publications.resumeId),
@@ -130,6 +135,7 @@ async def requested_resume(request): # --- function to get requested resume
                                                                         left join work on basics_information.id = work.resumeId
                                                                         left join volunteer on basics_information.id = volunteer.resumeId
                                                                         left join education on basics_information.id = education.resumeId
+                                                                        left join education_courses on education_courses.educationId = education.educationId
                                                                         left join awards on basics_information.id = awards.resumeId
                                                                         left join certificates on basics_information.id = awards.resumeId
                                                                         left join publications on basics_information.id = publications.resumeId
@@ -137,11 +143,16 @@ async def requested_resume(request): # --- function to get requested resume
                                                                         left join languages on basics_information.id = languages.resumeId
                                                                         left join interests on basics_information.id = interests.resumeId
                                                                         left join `references` on basics_information.id = `references`.resumeId
-                                                                        left join projects on basics_information.id = projects.resumeId where basics_information.id = {user_requested_id} group by basics_information.id"""
+                                                                        left join projects 
+                                                                                        on basics_information.id = projects.resumeId 
+                                                                                                        where basics_information.id = {user_requested_id} 
+                                                                                                                        group by basics_information.id"""
     fetch_resume_result = connect_engine.execute(fetch_resume_query)
 
     for i in fetch_resume_result:
         passed_resume = json.loads(i.resume)
+    
+    
 
 
 
@@ -215,8 +226,8 @@ async def requested_resume(request): # --- function to get requested resume
     
     # --- checking if resume dict is empty or not --- #
     if passed_resume:
-        print("passing resume")
+        print(" ------- passing resume ------- ")
     else:
-        print("nothing to pass")
+        print(" ------- nothing to pass ------- ")
 
     return JSONResponse( passed_resume )

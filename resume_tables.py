@@ -1,5 +1,6 @@
+from ast import Delete
 from database_engine import engine
-from sqlalchemy import Column, Integer, ForeignKey, Text
+from sqlalchemy import Column, Integer, ForeignKey, Text, delete
 from sqlalchemy.orm import declarative_base
 
 
@@ -70,7 +71,12 @@ class education(table_base):
     startDate = Column(Text)
     endDate = Column(Text)
     score = Column(Text)
-    courses = Column(Text)
+
+class education_courses(table_base):
+    __tablename__ = 'education_courses'
+    coursesId = Column(Integer, primary_key=True, autoincrement=True)
+    educationId = Column(Integer, ForeignKey("education.educationId"), nullable=False)
+    value = Column(Text)
 
 class awards(table_base):
     __tablename__ = 'awards'

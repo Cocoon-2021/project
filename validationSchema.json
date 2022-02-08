@@ -11,76 +11,76 @@
         "projects"
     ],
     "properties": {
-        "id": {
+        "resumeId": {
             "type": "integer"
         },
-        "coverLetter": {
+        "resumeCoverLetter": {
             "type": "string"
         },
         "basics": {
             "type": "object",
             "required": [
-                "name",
-                "email",
-                "phone",
-                "url",
+                "resumerName",
+                "resumerEmail",
+                "resumerPhone",
+                "resumerUrl",
                 "location",
                 "profiles"
             ],
             "properties": {
-                "name": {
+                "resumerName": {
                     "type": "string",
                     "maxLength": 25
                 },
-                "label": {
+                "position": {
                     "type": "string"
                 },
-                "image": {
+                "profilePicture": {
                     "type": "string"
                 },
-                "email": {
+                "resumerEmail": {
                     "type": "string",
                     "format": "email",
                     "pattern": "^[A-za-z0-9]+@[a-zA-Z]+.[a-zA-Z]{2,3}$"
                 },
-                "phone": {
+                "resumerPhone": {
                     "type": "string",
                     "pattern": "^[0-9]*$",
                     "minLength":10,
                     "maxLength": 15
                 },
-                "url": {
+                "resumerUrl": {
                     "type": "string"
                 },
-                "summary": {
+                "resumerSummary": {
                     "type": "string",
                     "maxLength": 750
                 },
                 "location": {
                     "type": "object",
                     "required": [
-                        "address",
-                        "postalCode",
-                        "city",
-                        "countryCode",
-                        "region"
+                        "resumerAddress",
+                        "resumerPostalCode",
+                        "resumerCity",
+                        "resumerCountryCode",
+                        "resumerRr=egion"
                     ],
                     "properties": {
-                        "address": {
+                        "resumerAddress": {
                             "type": "string"
                         },
-                        "postalCode": {
+                        "resumerPostalCode": {
                             "type": "string",
                             "maxLength": 10
                         },
-                        "city": {
+                        "resumerCity": {
                             "type": "string"
                         },
-                        "countryCode": {
+                        "resumerCountryCode": {
                             "type": "string",
                             "maxLength": 3
                         },
-                        "region": {
+                        "resumerRegion": {
                             "type": "string"
                         }
                     },
@@ -95,16 +95,16 @@
                             {
                                 "type": "object",
                                 "required": [
-                                    "url"
+                                    "profileUrl"
                                 ],
                                 "properties": {
-                                    "network": {
+                                    "profileNetwork": {
                                         "type": "string"
                                     },
-                                    "username": {
+                                    "profileUsername": {
                                         "type": "string"
                                     },
-                                    "url": {
+                                    "profileUrl": {
                                         "type": "string"
                                     }
                                 },
@@ -125,42 +125,42 @@
                     {
                         "type": "object",
                         "required": [
-                            "name",
-                            "location",
-                            "description",
-                            "position",
-                            "url",
-                            "startDate",
-                            "endDate"
+                            "companyName",
+                            "companayLocation",
+                            "workDescription",
+                            "workPosition",
+                            "companyUrl",
+                            "workStartDate",
+                            "workEndDate"
                         ],
                         "properties": {
-                            "name": {
+                            "companyName": {
                                 "type": "string"
                             },
-                            "location": {
+                            "companyLocation": {
                                 "type": "string"
                             },
-                            "description": {
+                            "workDescription": {
                                 "type": "string"
                             },
-                            "position": {
+                            "workPosition": {
                                 "type": "string"
                                 
                             },
-                            "url": {
+                            "companyUrl": {
                                 "type": "string"
                             },
-                            "startDate": {
+                            "workStartDate": {
                                 "type": "string"
                             },
-                            "endDate": {
+                            "workEndDate": {
                                 "type": "string"
                             },
-                            "summary": {
+                            "workSummary": {
                                 "type": "string",
                                 "maxLength": 750
                             },
-                            "highlights": {
+                            "workHighlights": {
                                 "type": "array",
                                 "uniqueItems": true,
                                 "additionalItems": true,
@@ -172,7 +172,7 @@
                                     ]
                                 }
                             },
-                            "keywords": {
+                            "workKeywords": {
                                 "type": "array",
                                 "uniqueItems": true,
                                 "additionalItems": true,
@@ -199,32 +199,32 @@
                     {
                         "type": "object",
                         "required": [
-                            "organization",
-                            "position",
-                            "url",
-                            "startDate",
-                            "endDate"
+                            "volunteeredOrganization",
+                            "volunteeredPosition",
+                            "organizationUrl",
+                            "volunteeringStartDate",
+                            "volunteeringEndDate"
                         ],
                         "properties": {
-                            "organization": {
+                            "volunteeredOrganization": {
                                 "type": "string"
                             },
-                            "position": {
+                            "volunteeredPosition": {
                                 "type": "string"
                             },
-                            "url": {
+                            "organizationUrl": {
                                 "type": "string"
                             },
-                            "startDate": {
+                            "volunteeringStartDate": {
                                 "type": "string"
                             },
-                            "endDate": {
+                            "volunteeringEndDate": {
                                 "type": "string"
                             },
-                            "summary": {
+                            "volunteeringSummary": {
                                 "type": "string"
                             },
-                            "highlights": {
+                            "volunteeringHighlights": {
                                 "type": "array",
                                 "uniqueItems": true,
                                 "additionalItems": true,
@@ -251,33 +251,33 @@
                     {
                         "type": "object",
                         "required": [
-                            "url",
-                            "startDate",
-                            "endDate"
+                            "institutionUrl",
+                            "educationStartDate",
+                            "educationEndDate"
                         ],
                         "properties": {
-                            "institution": {
+                            "educationInstitution": {
                                 "type": "string"
                             },
-                            "url": {
+                            "institutionUrl": {
                                 "type": "string"
                             },
-                            "area": {
+                            "educatedArea": {
                                 "type": "string"
                             },
-                            "studyType": {
+                            "educationStudyType": {
                                 "type": "string"
                             },
-                            "startDate": {
+                            "educationStartDate": {
                                 "type": "string"
                             },
-                            "endDate": {
+                            "educationEndDate": {
                                 "type": "string"
                             },
-                            "score": {
+                            "educationScore": {
                                 "type": "string"
                             },
-                            "courses": {
+                            "educatedCourses": {
                                 "type": "array",
                                 "uniqueItems": true,
                                 "additionalItems": true,
@@ -304,20 +304,20 @@
                     {
                         "type": "object",
                         "required": [
-                            "title",
-                            "date"
+                            "awardTitle",
+                            "awardedDate"
                         ],
                         "properties": {
-                            "title": {
+                            "awardTtitle": {
                                 "type": "string"
                             },
-                            "date": {
+                            "awardedDate": {
                                 "type": "string"
                             },
                             "awarder": {
                                 "type": "string"
                             },
-                            "summary": {
+                            "awardSummary": {
                                 "type": "string"
                             }
                         },
@@ -333,21 +333,21 @@
                     {
                         "type": "object",
                         "required": [
-                            "name",
-                            "date",
-                            "url"
+                            "certificateName",
+                            "certificateIssueDate",
+                            "certificateUrl"
                         ],
                         "properties": {
-                            "name":{
+                            "certificateName":{
                                 "type":"string"
                             },
-                            "date":{
+                            "certificateIssueDate":{
                                 "type":"string"
                             },
-                            "url":{
+                            "certificateUrl":{
                                 "type":"string"
                             },
-                            "issuer":{
+                            "certificateIssuer":{
                                 "type":"string"
                             }
                         }

@@ -28,7 +28,7 @@ async def resume_insertion(resume):
                 basics_information_data = resume["basics"]
                 for i in basics_information_data:
                     basics_dict[i] = basics_information_data[i]
-                basics_dict["coverLetter"] = resume["coverLetter"]
+                basics_dict["resumeCoverLetter"] = resume["resumeCoverLetter"]
                 basics_dict.pop("location")
                 basics_dict.pop("profiles")
 
@@ -41,7 +41,7 @@ async def resume_insertion(resume):
                 session.execute(basics_query)
 
                 max_id = session.execute(
-                    f"select max(id) from basics_information").fetchall()
+                    f"select max(resumeId) from basics_information").fetchall()
                 for i in max_id:
                     resumeId = i[0]
 
@@ -61,23 +61,25 @@ async def resume_insertion(resume):
                 work_data = resume["work"]
                 for i in work_data:
                     for n in i:
-                        if n != "highlights":
-                            if n != "keywords":
+                        if n != "workHighlights":
+                            if n != "workKeywords":
                                 work_dict[n] = i[n]
 
-                    for i in work_data:
-                        for n in i:
-                            if n == "highlights":
-                                work_highlights = i[n]
-                    work_highlights_data = ",".join(work_highlights)
-                    work_dict["highlights"] = work_highlights_data
+                    for m in work_data:
+                        for p in m:
+                            if p == "workHighlights":
+                                work_highlights = m[p]
+                    work_highlights_data = work_highlights
+                    # work_highlights_data = ",".join(work_highlights)
+                    work_dict["workHighlights"] = work_highlights_data
 
-                    for i in work_data:
-                        for n in i:
-                            if n == "keywords":
-                                work_keywords = i[n]
-                    work_keywords_data = ",".join(work_keywords)
-                    work_dict["keywords"] = work_keywords_data
+                    for x in work_data:
+                        for y in x:
+                            if y == "workKeywords":
+                                work_keywords = x[y]
+                    work_keywords_data = work_keywords
+                    # work_keywords_data = ",".join(work_keywords)
+                    work_dict["workKeywords"] = work_keywords_data
 
                     work_query = insert(work).values(**work_dict)
                     session.execute(work_query)
@@ -89,16 +91,17 @@ async def resume_insertion(resume):
                     volunteer_dict["resumeId"] = resumeId
                     for i in volunteer_data:
                         for n in i:
-                            if n != "highlights":
+                            if n != "volunteeringHighlights":
                                 volunteer_dict[n] = i[n]
 
-                        for i in volunteer_data:
-                            for n in i:
-                                if n == "highlights":
+                        for m in volunteer_data:
+                            for p in m:
+                                if p == "volunteeringHighlights":
                                     volunteer_highlights = i[n]
-                        volunteer_highlights_data = ",".join(
-                            volunteer_highlights)
-                        volunteer_dict["highlights"] = volunteer_highlights_data
+                        volunteer_highlights_data = volunteer_highlights
+                        # volunteer_highlights_data = ",".join(
+                        #     volunteer_highlights)
+                        volunteer_dict["volunteeringHighlights"] = volunteer_highlights_data
 
                         volunteer_query = insert(
                             volunteer).values(**volunteer_dict)
@@ -114,9 +117,9 @@ async def resume_insertion(resume):
                 education_dict["resumeId"] = resumeId
                 for i in education_data:
                     for n in i:
-                        if n != "courses":
+                        if n != "educatedCourses":
                             education_dict[n] = i[n]
-                        elif n == "courses":
+                        elif n == "educatedCourses":
                             education_courses_data = i[n]
                     print(education_dict)
                     print(education_courses_dict)
@@ -129,23 +132,12 @@ async def resume_insertion(resume):
                         education_id = n[0]
                         print(education_id)
                     for m in education_courses_data: 
-                        education_courses_dict["value"] = m
+                        education_courses_dict["educatedCourses"] = m
                         education_courses_dict["educationId"] = education_id
                         education_courses_query = insert(education_courses).values(**education_courses_dict)
                         session.execute(education_courses_query)
                     
 
-                
-                    # for n in i:
-                    #     if n == "courses":
-                    #         education_courses_data = i[n]
-                    #     print(education_courses_data)
-                    # education_courses_dict["educationId"] = education_id
-                        # for ecd in education_courses_data:
-                        #     education_courses_dict["value"] = ecd
-                        #     print(education_courses_dict)
-                        #     
-    
 
                 # --------- SECTION : AWARDS ---------- #
                 try:
@@ -195,15 +187,16 @@ async def resume_insertion(resume):
                 skills_dict["resumeId"] = resumeId
                 for i in skills_data:
                     for n in i:
-                        if n != "keywords":
+                        if n != "skillKeywords":
                             skills_dict[n] = i[n]
 
-                    for i in skills_data:
-                        for n in i:
-                            if n == "keywords":
-                                skills_keywords = i[n]
-                    skills_keywords_data = ",".join(skills_keywords)
-                    skills_dict["keywords"] = skills_keywords_data
+                    for m in skills_data:
+                        for p in m:
+                            if p == "skillKeywords":
+                                skills_keywords = m[p]
+                    skills_keywords_data = skills_keywords
+                    # skills_keywords_data = ",".join(skills_keywords)
+                    skills_dict["skillKeywords"] = skills_keywords_data
 
                     skills_query = insert(skills).values(**skills_dict)
                     session.execute(skills_query)
@@ -225,15 +218,16 @@ async def resume_insertion(resume):
                 interests_dict["resumeId"] = resumeId
                 for i in interests_data:
                     for n in i:
-                        if n != "keywords":
+                        if n != "interestKeywords":
                             interests_dict[n] = i[n]
 
-                    for i in interests_data:
-                        for n in i:
-                            if n == "keywords":
-                                interests_keywords = i[n]
-                    interests_keywords_data = ",".join(interests_keywords)
-                    interests_dict["keywords"] = interests_keywords_data
+                    for m in interests_data:
+                        for p in m:
+                            if p == "interestKeywords":
+                                interests_keywords = m[p]
+                    interests_keywords_data = interests_keywords
+                    # interests_keywords_data = ",".join(interests_keywords)
+                    interests_dict["interestKeywords"] = interests_keywords_data
 
                     interests_query = insert(
                         interests).values(**interests_dict)
@@ -259,37 +253,40 @@ async def resume_insertion(resume):
                 projects_dict["resumeId"] = resumeId
                 for i in projects_data:
                     for n in i:
-                        if n != "keywords":
-                            if n != "highlights":
-                                if n != "roles":
+                        if n != "projectsKeywords":
+                            if n != "projectHighlights":
+                                if n != "projectRoles":
                                     projects_dict[n] = i[n]
 
                     for i in projects_data:
                         for n in i:
-                            if n != "keywords":
-                                if n != "roles":
-                                    if n == "highlights":
+                            if n != "projectKeywords":
+                                if n != "projectRoles":
+                                    if n == "projectHighlights":
                                         projects_highlights = i[n]
-                    projects_highlights_data = ",".join(projects_highlights)
-                    projects_dict["highlights"] = projects_highlights_data
+                    projects_highlights_data = projects_highlights
+                    # projects_highlights_data = ",".join(projects_highlights)
+                    projects_dict["projectHighlights"] = projects_highlights_data
 
                     for i in projects_data:
                         for n in i:
-                            if n != "roles":
-                                if n != "highlights":
-                                    if n == "keywords":
+                            if n != "projectRoles":
+                                if n != "projectHighlights":
+                                    if n == "projectKeywords":
                                         projects_keywords = i[n]
-                    projects_keywords_data = ",".join(projects_keywords)
-                    projects_dict["keywords"] = projects_keywords_data
+                    projects_keywords_data = projects_keywords
+                    # projects_keywords_data = ",".join(projects_keywords)
+                    projects_dict["projectKeywords"] = projects_keywords_data
 
                     for i in projects_data:
                         for n in i:
-                            if n != "highlights":
-                                if n != "keywords":
-                                    if n == "roles":
+                            if n != "projectHighlights":
+                                if n != "projectKeywords":
+                                    if n == "projectRoles":
                                         projects_roles = i[n]
-                    projects_roles_data = ",".join(projects_roles)
-                    projects_dict["roles"] = projects_roles_data
+                    projects_roles_data = projects_roles
+                    # projects_roles_data = ",".join(projects_roles)
+                    projects_dict["projectRoles"] = projects_roles_data
 
                     projects_query = insert(projects).values(**projects_dict)
                     session.execute(projects_query)
@@ -309,11 +306,13 @@ async def resume_insertion(resume):
 async def resume_validate_and_insert(request): # -- function for validation verification and calling insertion
     # -----  VALIDATION  ----- #
     resume = await request.json()
-    validator = Draft7Validator(schema)
-    error_list = list(validator.iter_errors(resume))
-    if len(error_list) == 0:
-        print("no validation issue")
-        resumeId = await resume_insertion(resume)
+    # validator = Draft7Validator(schema)
+    # error_list = list(validator.iter_errors(resume))
+    # if len(error_list) == 0:
+    #     print("no validation issue")
+        # resumeId = await resume_insertion(resume)
+    resumeId = await resume_insertion(resume)
+
 
     return JSONResponse(resumeId)
 

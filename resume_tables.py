@@ -1,5 +1,6 @@
+from ast import Delete
 from database_engine import engine
-from sqlalchemy import Column, Integer, ForeignKey, Text
+from sqlalchemy import Column, Integer, ForeignKey, Text, delete
 from sqlalchemy.orm import declarative_base,relationship
 
 

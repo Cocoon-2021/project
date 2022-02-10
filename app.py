@@ -18,13 +18,13 @@ with open('validationSchema.json') as sc:
     schema = json.load(sc)
 
 
-# ------------------- RESUME INSERTION --------------------------- #
+# ------------------------------------------------------------- RESUME INSERTION --------------------------------------------------- #
 
 async def resume_insertion(resume):
     with connect_engine.connect() as session:
         with session.begin() as transaction:
             try:
-                # --------- SECTION : BASICS --------- #
+                # --------------------------------------- SECTION : BASICS ------------------------------------- #
 
                 basics_dict = {}
                 basics_information_data = resume["basics"]
@@ -43,7 +43,7 @@ async def resume_insertion(resume):
                 session.execute(basics_query)
 
                 max_id = session.execute(
-                    f"select max(resumeId) from basics_information").fetchall()
+                    f"select resumeId from basics_information where resumeId = @@Identity").fetchall()
                 for i in max_id:
                     resumeId = i[0]
 
@@ -57,7 +57,7 @@ async def resume_insertion(resume):
                         basics_profiles).values(**basics_profiles_dict)
                     session.execute(basics_profiles_query)
 
-                # --------- SECTION : WORK --------- #
+                # ------------------------------------------- SECTION : WORK ------------------------------- #
                 work_dict = {}
                 work_dict["resumeId"] = resumeId
                 work_data = resume["work"]
@@ -69,7 +69,7 @@ async def resume_insertion(resume):
                     session.execute(work_query)
 
                 try:
-                    # ---------- SECTION : VOLUNTEER --------- #
+                    # ------------------------------------ SECTION : VOLUNTEER ------------------------------------- #
                     volunteer_data = resume["volunteer"]
                     volunteer_dict = {}
                     volunteer_dict["resumeId"] = resumeId
@@ -84,7 +84,7 @@ async def resume_insertion(resume):
                 except:
                     print("No volunteer datas. ")
 
-                # ---------- SECTION : EDUCATION ---------- #
+                # ---------------------------------------- SECTION : EDUCATION ------------------------------------- #
                 education_data = resume["education"]
                 education_dict = {}
                 education_courses_dict = {}
@@ -111,7 +111,7 @@ async def resume_insertion(resume):
                     
 
 
-                # --------- SECTION : AWARDS ---------- #
+                # ------------------------------------------ SECTION : AWARDS -------------------------------------- #
                 try:
                     awards_data = resume["awards"]
                     awards_dict = {}
@@ -125,7 +125,7 @@ async def resume_insertion(resume):
                 except:
                     print("No awards datas. ")
 
-                # --------- SECTION : CERTIFICATES --------- #
+                # ---------------------------------------- SECTION : CERTIFICATES ------------------------------- #
                 try:
                     certificates_data = resume["certificates"]
                     certificates_dict = {}
@@ -139,7 +139,7 @@ async def resume_insertion(resume):
                 except:
                     print("No certificates datas.")
 
-                # --------- SECTION : PUBLICATIONS --------- #
+                # ---------------------------------------- SECTION : PUBLICATIONS ------------------------------------- #
                 try:
                     publications_data = resume["publications"]
                     publications_dict = {}
@@ -153,7 +153,7 @@ async def resume_insertion(resume):
                 except:
                     print("Publications Data Missing")
 
-                # --------- SECTION : SKILLS ------------ #
+                # ----------------------------------------- SECTION : SKILLS -------------------------------------- #
                 skills_data = resume["skills"]
                 skills_dict = {}
                 skills_dict["resumeId"] = resumeId
@@ -164,7 +164,7 @@ async def resume_insertion(resume):
                     skills_query = insert(skills).values(**skills_dict)
                     session.execute(skills_query)
 
-                # --------- SECTION : LANGUAGES --------- #
+                # ----------------------------------------- SECTION : LANGUAGES --------------------------------------------- #
                 languages_data = resume["languages"]
                 languages_dict = {}
                 languages_dict["resumeId"] = resumeId
@@ -176,7 +176,7 @@ async def resume_insertion(resume):
                         languages).values(**languages_dict)
                     session.execute(languages_query)
 
-                # --------- SECTION : INTERESTS --------- #
+                # ------------------------------------------ SECTION : INTERESTS ---------------------------------------- #
                 interests_data = resume["interests"]
                 interests_dict = {}
                 interests_dict["resumeId"] = resumeId
@@ -188,7 +188,7 @@ async def resume_insertion(resume):
                         interests).values(**interests_dict)
                     session.execute(interests_query)
 
-                # --------- SECTION : REFERENCES --------- #
+                # ----------------------------------------- SECTION : REFERENCES ---------------------------------- #
                 try:
                     references_data = resume["references"]
                     references_dict = {}
@@ -203,7 +203,7 @@ async def resume_insertion(resume):
                 except:
                     print("No Referenecs included")
 
-                # --------- SECTION : PROJECTS --------- #
+                # ----------------------------------------- SECTION : PROJECTS ---------------------------------- #
                 projects_data = resume["projects"]
                 projects_dict = {}
                 projects_dict["resumeId"] = resumeId
@@ -227,7 +227,8 @@ async def resume_insertion(resume):
 
 
 async def resume_validate_and_insert(request): # -- function for validation verification and calling insertion
-    # -----  VALIDATION  ----- #
+    
+    # ---------------------  VALIDATION  ---------------------------- #
     resume = await request.json()
     validator = Draft7Validator(schema)
     error_list = list(validator.iter_errors(resume))

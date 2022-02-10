@@ -1,5 +1,3 @@
-from operator import rshift
-from select import select
 from resume_tables import *
 from database_engine import connect_engine
 from sqlalchemy.sql import insert,delete
@@ -18,7 +16,7 @@ async def resume_edit_and_update(request):
         with connect_engine.connect() as session:
             with session.begin() as transaction:
                 try:
-                    # --------- SECTION : BASICS --------- #
+                    # ------------------------------------ SECTION : BASICS ----------------------------------- #
                     work_deleteion_query = delete(basics_information).where(basics_information.resumeId == user_requested_id)
                     session.execute(work_deleteion_query)
                     resumeId = user_requested_id
@@ -49,7 +47,7 @@ async def resume_edit_and_update(request):
                             basics_profiles).values(**basics_profiles_dict)
                         session.execute(basics_profiles_query)
 
-                    # --------- SECTION : WORK --------- #
+                    # ---- ---------------------------------- SECTION : WORK ------------------------------- #
                     work_dict = {}
                     work_dict["resumeId"] = resumeId
                     work_data = resume["work"]
@@ -61,7 +59,7 @@ async def resume_edit_and_update(request):
                         session.execute(work_query)
 
                     try:
-                        # ---------- SECTION : VOLUNTEER --------- #
+                        # ----------------------------------- SECTION : VOLUNTEER ------------------------------- #
                         volunteer_data = resume["volunteer"]
                         volunteer_dict = {}
                         volunteer_dict["resumeId"] = resumeId
@@ -76,7 +74,7 @@ async def resume_edit_and_update(request):
                     except:
                         print("No volunteer datas. ")
 
-                    # ---------- SECTION : EDUCATION ---------- #
+                    # ---------------------------------------- SECTION : EDUCATION ----------------------------------- #
                     education_data = resume["education"]
                     education_dict = {}
                     education_courses_dict = {}
@@ -103,7 +101,7 @@ async def resume_edit_and_update(request):
                         
 
 
-                    # --------- SECTION : AWARDS ---------- #
+                    # --------------------------------------------- SECTION : AWARDS --------------------------------------- #
                     try:
                         awards_data = resume["awards"]
                         awards_dict = {}
@@ -117,7 +115,7 @@ async def resume_edit_and_update(request):
                     except:
                         print("No awards datas. ")
 
-                    # --------- SECTION : CERTIFICATES --------- #
+                    # ---------------------------------------- SECTION : CERTIFICATES -------------------------------------- #
                     try:
                         certificates_data = resume["certificates"]
                         certificates_dict = {}
@@ -131,7 +129,7 @@ async def resume_edit_and_update(request):
                     except:
                         print("No certificates datas.")
 
-                    # --------- SECTION : PUBLICATIONS --------- #
+                    # ---------------------------------------- SECTION : PUBLICATIONS -------------------------------------- #
                     try:
                         publications_data = resume["publications"]
                         publications_dict = {}
@@ -145,7 +143,7 @@ async def resume_edit_and_update(request):
                     except:
                         print("Publications Data Missing")
 
-                    # --------- SECTION : SKILLS ------------ #
+                    # ----------------------------------------- SECTION : SKILLS ----------------------------------- #
                     skills_data = resume["skills"]
                     skills_dict = {}
                     skills_dict["resumeId"] = resumeId
@@ -156,7 +154,7 @@ async def resume_edit_and_update(request):
                         skills_query = insert(skills).values(**skills_dict)
                         session.execute(skills_query)
 
-                    # --------- SECTION : LANGUAGES --------- #
+                    # ---------------------------------------- SECTION : LANGUAGES ------------------------------------- #
                     languages_data = resume["languages"]
                     languages_dict = {}
                     languages_dict["resumeId"] = resumeId
@@ -168,7 +166,7 @@ async def resume_edit_and_update(request):
                             languages).values(**languages_dict)
                         session.execute(languages_query)
 
-                    # --------- SECTION : INTERESTS --------- #
+                    # ----------------------------------------- SECTION : INTERESTS -------------------------------------- #
                     interests_data = resume["interests"]
                     interests_dict = {}
                     interests_dict["resumeId"] = resumeId
@@ -180,7 +178,7 @@ async def resume_edit_and_update(request):
                             interests).values(**interests_dict)
                         session.execute(interests_query)
 
-                    # --------- SECTION : REFERENCES --------- #
+                    # ---------------------------------------- SECTION : REFERENCES ----------------------------------------- #
                     try:
                         references_data = resume["references"]
                         references_dict = {}
@@ -195,7 +193,7 @@ async def resume_edit_and_update(request):
                     except:
                         print("No Referenecs included")
 
-                    # --------- SECTION : PROJECTS --------- #
+                    # ---------------------------------------- SECTION : PROJECTS -------------------------------------------------- #
                     projects_data = resume["projects"]
                     projects_dict = {}
                     projects_dict["resumeId"] = resumeId
